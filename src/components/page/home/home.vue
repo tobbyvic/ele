@@ -1,0 +1,167 @@
+<template>
+  <div class="home">
+    <!--header-->
+    <div class="home_header">
+      <div :span="24" class="home_header--inside">
+        <div class="home_header--inside_div">
+          ele.me
+        </div>
+        <div class="home_header--inside_div">
+          登录|注册
+        </div>
+      </div>
+    </div>
+    <!--top-->
+    <div class="home_top">
+      <div class="home_top_div home_top_div--above">
+        <span>当前定位城市：</span>
+        <span>定位不准时，请在城市列表中选择</span>
+      </div>
+      <div class="home_top_div home_top_div--under">
+        <span id="location_font">苏州</span>
+        <span><i class="el-icon-arrow-right"></i></span>
+      </div>
+    </div>
+    <!--middle-->
+    <section class="home_middle">
+      <div class="home_middle--hot">
+        热门城市
+      </div>
+      <div class="home_middle--hot_list">
+        <ul>
+          <li v-for="city in citys" :key="city.id">
+            {{ city.name }}
+          </li>
+        </ul>
+      </div>
+    </section>
+  </div>
+</template>
+
+<script>
+  export default {
+    name: "home",
+    data() {
+      return {
+        citys: [
+          {id: 0, name: "苏州"},
+          {id: 1, name: "苏州"},
+          {id: 2, name: "苏州"},
+          {id: 3, name: "苏州"},
+          {id: 3, name: "苏州"}
+        ]
+      }
+    }
+  }
+</script>
+
+<style>
+  /**
+  header
+   */
+  .home_header {
+    background: #2A85E5;
+    height: 3.35rem;
+    position: fixed;
+    width: 100%;
+    top: 0;
+    left: 0;
+  }
+
+  .home_header--inside {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .home_header--inside_div {
+    padding: 0 10px;
+    color: #ffffff;
+  }
+
+  /**
+  top
+   */
+  .home_top {
+    background-color: #fff;
+    height: 5rem;
+    width: 100%;
+    margin-top: 3.35rem;
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 0.5rem;
+  }
+
+  .home_top_div {
+    width: 100%;
+    display: flex;
+    height: 50%;
+    padding: 10px;
+    border-bottom: 1px solid #e4e4e4;
+    justify-content: space-between;
+  }
+
+  .home_top_div span {
+    align-self: center;
+    font-size: 0.5rem;
+    color: #9f9f9f;
+  }
+
+  .home_top_div--above {
+  }
+
+  .home_top_div--under {
+  }
+
+  .home_top_div--under span {
+    font-size: 1rem;
+  }
+
+  #location_font {
+    color: #3190e8;
+  }
+
+  /**
+  middle
+   */
+  .home_middle {
+    background-color: #fff;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    border-top: 1px solid #e4e4e4;
+    margin-bottom: 0.5rem;
+  }
+
+  .home_middle--hot {
+    width: 100%;
+    padding: 8px;
+    font-size: 0.8rem;
+    color: #2F2F2F;
+  }
+
+  .home_middle--hot_list ul {
+    width: 100%;
+    font-size: 0.9rem;
+    color: #3190e8;
+    display: flex;
+    flex-wrap: wrap;
+    border-top: 1px solid #e4e4e4;
+    border-left: 1px solid #e4e4e4;
+  }
+
+  .home_middle--hot_list li {
+    width: 25%;
+    text-align: center;
+    font-size: 0.9rem;
+    padding: 10px 0;
+    border-right: 1px solid #e4e4e4;
+    border-bottom: 1px solid #e4e4e4;
+  }
+
+  /**
+  content
+   */
+
+</style>
