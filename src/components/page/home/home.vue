@@ -18,7 +18,7 @@
         <span>定位不准时，请在城市列表中选择</span>
       </div>
       <div class="home_top_div home_top_div--under">
-        <span id="location_font">苏州</span>
+        <span id="location_font">{{ location }}</span>
         <span><i class="el-icon-arrow-right"></i></span>
       </div>
     </div>
@@ -29,8 +29,21 @@
       </div>
       <div class="home_middle--hot_list">
         <ul>
-          <li v-for="city in citys" :key="city.id">
+          <li v-for="city in hotCitys" :key="city.id">
             {{ city.name }}
+          </li>
+        </ul>
+      </div>
+    </section>
+    <!--content-->
+    <section class="home_middle" v-for="title in getGroupTitle" :key="title.key">
+      <div class="home_middle--hot">
+        {{ title }}
+      </div>
+      <div class="home_middle--hot_list">
+        <ul>
+          <li v-for="city in groupCitys[title]" :key="city.id">
+           {{ city.name }}
           </li>
         </ul>
       </div>
@@ -39,18 +52,55 @@
 </template>
 
 <script>
+  import req from '@/request'
+
   export default {
     name: "home",
     data() {
       return {
-        citys: [
-          {id: 0, name: "苏州"},
-          {id: 1, name: "苏州"},
-          {id: 2, name: "苏州"},
-          {id: 3, name: "苏州"},
-          {id: 3, name: "苏州"}
-        ]
+        // 当前定位城市
+        location: '',
+        // 热门城市
+        hotCitys: [],
+        // 所有城市
+        groupCitys: {}
       }
+    },
+    computed: {
+      /**
+       * 得到返回值中的title A~Z
+       * @returns {string[]}
+       */
+      getGroupTitle: function () {
+        return Object.keys(this.groupCitys).sort();
+      }
+
+    },
+    created() {
+      /**
+       * 初始化时发送ajax请求数据
+       */
+      let that = this;
+      // 异步请求，首先获得定位城市
+      req.get('v1/cities', {type: 'guess'})
+        .then(function (response) {
+          // 获取成功后，获得热门城市
+          that.location = response.data.name;
+          req.get('v1/cities', {type: 'hot'})
+            .then(function (response) {
+              let res = response.data;
+              that.hotCitys = res;
+              //获取成功后，获得所有城市
+              req.get('v1/cities', {type: 'group'})
+                .then(function (response) {
+                  let res = response.data;
+                  that.groupCitys = res;
+                  console.log(res);
+                })
+            })
+        })
+    },
+    methods: {
     }
   }
 </script>
@@ -158,6 +208,10 @@
     padding: 10px 0;
     border-right: 1px solid #e4e4e4;
     border-bottom: 1px solid #e4e4e4;
+    /*文本不换行，超出部分用省略号表示*/
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 
   /**
