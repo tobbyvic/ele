@@ -16,7 +16,13 @@ export default {
       transformResponse: [(data) => {
         // let res = data.slice(1)
         return JSON.parse(data)
-      }]
+      }],
+      getAll: (a,b,c) => {
+        axios.all([a(), b(), c()])
+          .then(axios.spread(function (i, j, k) {
+            return [i,j,k]
+          }));
+      }
     });
 
     /**

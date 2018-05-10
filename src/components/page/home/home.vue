@@ -43,7 +43,7 @@
       <div class="home_middle--hot_list">
         <ul>
           <li v-for="city in groupCitys[title]" :key="city.id">
-           {{ city.name }}
+            {{ city.name }}
           </li>
         </ul>
       </div>
@@ -53,6 +53,8 @@
 
 <script>
   import req from '@/request'
+  //引入axios
+  import axios from 'axios'
 
   export default {
     name: "home",
@@ -81,7 +83,8 @@
        * 初始化时发送ajax请求数据
        */
       let that = this;
-      // 异步请求，首先获得定位城市
+      /*
+      //异步请求，首先获得定位城市
       req.get('v1/cities', {type: 'guess'})
         .then(function (response) {
           // 获取成功后，获得热门城市
@@ -99,8 +102,27 @@
                 })
             })
         })
+        */
+      /**
+       * 并发axios
+       */
+      axios.all([this.AJAX_GET({type: 'guess'}), this.AJAX_GET({type: 'hot'}), this.AJAX_GET({type: 'group'})])
+        .then(axios.spread(function (location, hot, group) {
+          that.location = location.data.name;
+          that.hotCitys = hot.data;
+          that.groupCitys = group.data;
+        }));
+
     },
     methods: {
+      AJAX_GET: function (para) {
+        return axios({
+          method: 'get',
+          url: 'v1/cities',
+          baseURL: 'http://cangdu.org:8001/',
+          params: para  //params是get的参数，data是Only applicable for request methods 'PUT', 'POST', and 'PATCH'
+        });
+      }
     }
   }
 </script>
