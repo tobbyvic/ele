@@ -17,8 +17,8 @@
         <span>当前定位城市：</span>
         <span>定位不准时，请在城市列表中选择</span>
       </div>
-      <div class="home_top_div home_top_div--under">
-        <span id="location_font">{{ location }}</span>
+      <div class="home_top_div home_top_div--under" @click="POSITION_CITY">
+        <span id="location_font">{{ location.name }}</span>
         <span><i class="el-icon-arrow-right"></i></span>
       </div>
     </div>
@@ -36,13 +36,13 @@
       </div>
     </section>
     <!--content-->
-    <section class="home_middle" v-for="title in getGroupTitle" :key="title.key">
-      <div class="home_middle--hot">
+    <section class="home_content" v-for="title in getGroupTitle" :key="title.key">
+      <div class="home_content--title">
         {{ title }}
       </div>
-      <div class="home_middle--hot_list">
+      <div class="home_content--list">
         <ul>
-          <li v-for="city in groupCitys[title]" :key="city.id">
+          <li v-for="city in groupCitys[title]" :key="city.id" class="fontGray">
             {{ city.name }}
           </li>
         </ul>
@@ -52,7 +52,6 @@
 </template>
 
 <script>
-  import req from '@/request'
   //引入axios
   import axios from 'axios'
 
@@ -61,7 +60,7 @@
     data() {
       return {
         // 当前定位城市
-        location: '',
+        location: {},
         // 热门城市
         hotCitys: [],
         // 所有城市
@@ -108,13 +107,19 @@
        */
       axios.all([this.AJAX_GET({type: 'guess'}), this.AJAX_GET({type: 'hot'}), this.AJAX_GET({type: 'group'})])
         .then(axios.spread(function (location, hot, group) {
-          that.location = location.data.name;
+          that.location = location.data;
           that.hotCitys = hot.data;
           that.groupCitys = group.data;
         }));
 
     },
     methods: {
+      /**
+       * 初始化页面时的ajax
+       * @param para
+       * @returns {AxiosPromise}
+       * @constructor
+       */
       AJAX_GET: function (para) {
         return axios({
           method: 'get',
@@ -122,6 +127,14 @@
           baseURL: 'http://cangdu.org:8001/',
           params: para  //params是get的参数，data是Only applicable for request methods 'PUT', 'POST', and 'PATCH'
         });
+      },
+      /**
+       * 点击定位城市后跳转
+       * @constructor
+       */
+      POSITION_CITY: function () {
+        let id = this.location.id;
+        this.$router.push({ path: `/cities/${id}` });
       }
     }
   }
@@ -197,7 +210,7 @@
   /**
   middle
    */
-  .home_middle {
+  .home_middle,.home_content {
     background-color: #fff;
     width: 100%;
     display: flex;
@@ -206,14 +219,14 @@
     margin-bottom: 0.5rem;
   }
 
-  .home_middle--hot {
+  .home_middle--hot,.home_content--title {
     width: 100%;
     padding: 8px;
     font-size: 0.8rem;
     color: #2F2F2F;
   }
 
-  .home_middle--hot_list ul {
+  .home_middle--hot_list ul,.home_content--list ul {
     width: 100%;
     font-size: 0.9rem;
     color: #3190e8;
@@ -223,7 +236,7 @@
     border-left: 1px solid #e4e4e4;
   }
 
-  .home_middle--hot_list li {
+  .home_middle--hot_list li,.home_content--list li {
     width: 25%;
     text-align: center;
     font-size: 0.9rem;
@@ -239,5 +252,8 @@
   /**
   content
    */
+  .fontGray {
+    color: #666;
+  }
 
 </style>
