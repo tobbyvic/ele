@@ -3,7 +3,21 @@ import Qs from 'qs'
 
 export default {
   install(Vue, options) {
-
+    /**
+     * 将一个数组分成几个同等长度的数组
+     * @param array[分割的原数组]
+     * @param size[每个子数组的长度]
+     * @returns {Array}
+     */
+    Vue.prototype.sliceArray = function(array, size) {
+      let result = [];
+      for (let x = 0; x < Math.ceil(array.length / size); x++) {
+        let start = x * size;
+        let end = start + size;
+        result.push(array.slice(start, end));
+      }
+      return result;
+    };
     /**
      * 快排，返回排序后的数组
      * @param arr
