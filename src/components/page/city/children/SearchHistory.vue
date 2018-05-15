@@ -40,7 +40,7 @@
       ENTRY_PAGE(addr) {
         console.log(addr);
         const geohash = addr.geohash;
-        this.$router.push({ path: '/entry', params: { geohash }}) // -> /user
+        this.$router.push({ path: '/entry', query: { geohash }}) // -> /user
       }
     }
   }

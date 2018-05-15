@@ -1,21 +1,21 @@
 <template>
-  <div class="index">
+  <div class="entry">
     <!--header-->
-    <div class="index_header">
-      <div :span="24" class="index_header--inside">
-        <div class="index_header--inside_div">
+    <div class="entry_header">
+      <div :span="24" class="entry_header--inside">
+        <div class="entry_header--inside_div">
           <i class="el-icon-search"></i>
         </div>
-        <div class="index_header--inside_location">
-          xxx
+        <div class="entry_header--inside_location">
+          {{ locationAddress }}
         </div>
-        <div class="index_header--inside_div">
+        <div class="entry_header--inside_div">
           登录|注册
         </div>
       </div>
     </div>
     <!--top-->
-    <section class="index_top">
+    <section class="entry_top">
       <!-- Slider main container -->
       <div class="swiper-container">
         <!-- Additional required wrapper -->
@@ -41,8 +41,15 @@
         <!-- Add Pagination -->
         <div class="swiper-pagination swiper-container--bottom"></div>
       </div>
-
     </section>
+    <!--restaurant content-->
+    <section class="entry_content">
+      <ul>
+        <li></li>
+      </ul>
+    </section>
+    <!--bottom nav-->
+    <bottom-nav class="entry_bottom"></bottom-nav>
   </div>
 </template>
 
@@ -56,21 +63,31 @@
 
   import req from '@/request'
 
+  import BottomNav from './children/BottomNav'
+
+
   export default {
-    name: "index",
+    name: "entry",
+    components: {
+      BottomNav: BottomNav
+    },
     data() {
       return {
         foodstuff1: [],
         foodstuff2: [],
-        baseImgurl: 'https://fuss10.elemecdn.com'
+        baseImgurl: 'https://fuss10.elemecdn.com',
+        locationAddress: ''
       }
     },
     mounted() {
+
+      console.log(this.$route.query);
+      const geohash = this.$route.query.geohash;
+      const that = this;
       /**
        * 初始化食品分类
        * @type {mounted}
        */
-      const that = this;
       req.get('v2/index_entry')
         .then(function (response) {
           // 获取成功后
@@ -86,7 +103,17 @@
           //   }
           // });
           that.createSwiper();
-        })
+        });
+      /**
+       * 根据经纬度详细定位
+       */
+      req.get('v2/pois/' + geohash)
+        .then(function (response) {
+          // 获取成功后
+          console.log(response.data);
+          that.locationAddress = response.data.name;
+        });
+
     },
     methods: {
       /**
@@ -113,7 +140,7 @@
   /**
   header
    */
-  .index_header {
+  .entry_header {
     background: #2A85E5;
     height: 3.35rem;
     position: fixed;
@@ -122,38 +149,44 @@
     left: 0;
   }
 
-  .index_header--inside {
+  .entry_header--inside {
     height: 100%;
     display: flex;
     align-items: center;
     justify-content: space-between;
   }
 
-  .index_header--inside_div {
+  .entry_header--inside_div {
     padding: 0 10px;
     color: #ffffff;
   }
 
-  .index_header--inside_div a {
+  .entry_header--inside_div a {
     color: #ffffff;
   }
 
-  .index_header--inside_location {
+  .entry_header--inside_location {
     padding: 0 10px;
     color: #ffffff;
     position: absolute;
+    width: 50%;
     left: 50%;
     top: 50%;
     transform: translateX(-50%) translateY(-50%);
     -webkit-transform: translateX(-50%) translateY(-50%);
     -moz-transform: translateX(-50%) translateY(-50%);
     -ms-transform: translateX(-50%);
+
+    /*文本不换行，超出部分用省略号表示*/
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 
   /**
   top
    */
-  .index_top {
+  .entry_top {
     background-color: #fff;
     /*height: 5rem;*/
     width: 100%;
@@ -161,6 +194,7 @@
     flex-direction: column;
     margin-bottom: 0.5rem;
   }
+
   /*swiper*/
   .swiper-container {
     width: 100%;
@@ -218,6 +252,13 @@
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+  }
+
+  /**
+  bottom
+   */
+  .entry_bottom {
+
   }
 
 </style>

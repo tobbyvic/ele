@@ -21,8 +21,12 @@
        */
       ADDRESS_ENTRANCE: function (addr) {
         console.log(addr);
+        // 添加到sessionStorage历史记录
         let addrStr = JSON.stringify(addr);
         sessionStorage.setItem(addr.name,addrStr);
+        // 转到entry页面
+        const geohash = addr.geohash;
+        this.$router.push({ path: '/entry', query: { geohash }}) // -> /user
       }
     }
   }
