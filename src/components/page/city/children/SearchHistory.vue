@@ -4,7 +4,7 @@
     <section>
       <div class="search-history_content">
         <ul class="search-history_list">
-          <li v-for="address in searchHistory" :key="">
+          <li v-for="address in searchHistory" :key="" @click="ENTRY_PAGE(address)">
             <h4>{{ address.name }}</h4>
             <p>{{ address.address }}</p>
           </li>
@@ -34,6 +34,13 @@
           arr.push(JSON.parse(val));
         }
         return arr
+      }
+    },
+    methods: {
+      ENTRY_PAGE(addr) {
+        console.log(addr);
+        const geohash = addr.geohash;
+        this.$router.push({ path: '/entry', params: { geohash }}) // -> /user
       }
     }
   }

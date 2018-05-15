@@ -3,13 +3,13 @@ import Qs from 'qs'
 
 export default {
   install(Vue, options) {
+
     /**
      * 将一个数组分成几个同等长度的数组
-     * @param array[分割的原数组]
-     * @param size[每个子数组的长度]
-     * @returns {Array}
+     * array[分割的原数组]
+     * size[每个子数组的长度]
      */
-    Vue.prototype.sliceArray = function(array, size) {
+    Vue.prototype.sliceArray = function (array, size) {
       let result = [];
       for (let x = 0; x < Math.ceil(array.length / size); x++) {
         let start = x * size;
@@ -23,15 +23,15 @@ export default {
      * @param arr
      * @returns {array}
      */
-    Vue.prototype.quickSort = function(arr) {
+    Vue.prototype.quickSort = function (arr) {
       if (arr.length <= 1) {
         return arr;
       }
-      var pivotIndex = Math.floor(arr.length / 2);
-      var pivot = arr.splice(pivotIndex, 1)[0];
-      var left = [];
-      var right = [];
-      for (var i = 0; i < arr.length; i++) {
+      let pivotIndex = Math.floor(arr.length / 2);
+      let pivot = arr.splice(pivotIndex, 1)[0];
+      let left = [];
+      let right = [];
+      for (let i = 0; i < arr.length; i++) {
         //根据price进行快排
         if (arr[i].price < pivot.price) {
           left.push(arr[i]);
@@ -47,21 +47,21 @@ export default {
      * @param b
      * @returns {boolean}
      */
-    Vue.prototype.isObjectValueEqual = function(a, b) {
+    Vue.prototype.isObjectValueEqual = function (a, b) {
       if (typeof a == 'number' && typeof b == 'number') {
         return a == b
       }
 
 
-      var aProps = Object.getOwnPropertyNames(a);
-      var bProps = Object.getOwnPropertyNames(b);
+      let aProps = Object.getOwnPropertyNames(a);
+      let bProps = Object.getOwnPropertyNames(b);
 
       if (aProps.length != bProps.length) {
         return false;
       }
 
-      for (var i = 0; i < aProps.length; i++) {
-        var propName = aProps[i];
+      for (let i = 0; i < aProps.length; i++) {
+        let propName = aProps[i];
         if (Object.prototype.toString(a[propName]) == '[Object Object]' || Object.prototype.toString(b[propName]) == '[Object Object]') {
           isObjectValueEqual(a[propName], b[propName])
         }
@@ -80,12 +80,12 @@ export default {
       console.log(time);
       let date = new Date(parseInt(time));
       let Y = date.getFullYear() + '-';
-      let M = (date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1) : date.getMonth()+1) + '-';
+      let M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '-';
       let D = date.getDate() + ' ';
       let H = date.getHours() + ':';
       let m = date.getMinutes() + ':';
       let s = date.getSeconds();
-      return Y+M+D+H+m+s
+      return Y + M + D + H + m + s
     }
 
   }

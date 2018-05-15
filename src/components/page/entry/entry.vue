@@ -161,7 +161,7 @@
     flex-direction: column;
     margin-bottom: 0.5rem;
   }
-
+  /*swiper*/
   .swiper-container {
     width: 100%;
     height: 100%;
@@ -219,7 +219,5 @@
     text-overflow: ellipsis;
     white-space: nowrap;
   }
-  .swiper-container--bottom {
-    bottom: 0;
-  }
+
 </style>

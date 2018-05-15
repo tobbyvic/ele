@@ -4,7 +4,7 @@
     <div class="city_header">
       <div :span="24" class="city_header--inside">
         <div class="city_header--inside_div">
-          <router-link to="/home"><i class="el-icon-arrow-left"></i></router-link>
+          <i class="el-icon-arrow-left"></i>
         </div>
         <div class="city_header--inside_location">
           {{ locationCity.name }}
@@ -28,7 +28,7 @@
       </div>
     </section>
     <!--content-->
-    <search-history v-if="showHistory"></search-history>
+    <search-history v-if="searchHistory"></search-history>
     <search-keyword :search-result="searchResult" v-else></search-keyword>
 
 
@@ -37,21 +37,22 @@
 
 <script>
   import req from '@/request'
-  import SearchHistory from './children/SearchHistory'
-  import SearchKeyword from './children/SearchKeyword'
+  import searchHistory from './children/searchHistory'
+  import searchKeyword from './children/searchKeyword'
 
   export default {
     name: "city",
     components: {
-      SearchHistory: SearchHistory,
-      SearchKeyword: SearchKeyword
+      searchHistory: searchHistory,
+      searchKeyword: searchKeyword
     },
     data() {
       return {
         address: '',
         locationCity: '',
-        searchResult: [],
-        showHistory: true
+        searchHistory: true,
+        searchResult: []
+
       }
     },
     created() {
@@ -82,7 +83,8 @@
               // 获取成功后
               console.log(response.data);
               that.searchResult = response.data;
-              that.showHistory = false;
+              // 切换子组件为SearchKeyword
+              that.searchHistory = false;
             })
         }
       }
@@ -112,10 +114,6 @@
 
   .city_header--inside_div {
     padding: 0 10px;
-    color: #ffffff;
-  }
-
-  .city_header--inside_div a {
     color: #ffffff;
   }
 

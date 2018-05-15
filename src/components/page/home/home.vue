@@ -79,32 +79,9 @@
     },
     created() {
       /**
-       * 初始化时发送ajax请求数据
+       * 初始化时发送ajax请求数据，并发axios
        */
       let that = this;
-      /*
-      //异步请求，首先获得定位城市
-      req.get('v1/cities', {type: 'guess'})
-        .then(function (response) {
-          // 获取成功后，获得热门城市
-          that.location = response.data.name;
-          req.get('v1/cities', {type: 'hot'})
-            .then(function (response) {
-              let res = response.data;
-              that.hotCitys = res;
-              //获取成功后，获得所有城市
-              req.get('v1/cities', {type: 'group'})
-                .then(function (response) {
-                  let res = response.data;
-                  that.groupCitys = res;
-                  console.log(res);
-                })
-            })
-        })
-        */
-      /**
-       * 并发axios
-       */
       axios.all([this.AJAX_GET({type: 'guess'}), this.AJAX_GET({type: 'hot'}), this.AJAX_GET({type: 'group'})])
         .then(axios.spread(function (location, hot, group) {
           that.location = location.data;
