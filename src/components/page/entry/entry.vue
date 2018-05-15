@@ -7,7 +7,7 @@
           <i class="el-icon-search"></i>
         </div>
         <div class="entry_header--inside_location">
-          {{ locationAddress }}
+          {{ locationAddress.name }}
         </div>
         <div class="entry_header--inside_div">
           登录|注册
@@ -45,7 +45,9 @@
     <!--restaurant content-->
     <section class="entry_content">
       <ul>
-        <li></li>
+        <li v-for="restaurant in locationRestaurant" :key="restaurant.id">
+          {{ restaurant.name }}
+        </li>
       </ul>
     </section>
     <!--bottom nav-->
@@ -76,7 +78,8 @@
         foodstuff1: [],
         foodstuff2: [],
         baseImgurl: 'https://fuss10.elemecdn.com',
-        locationAddress: ''
+        locationAddress: {},
+        locationRestaurant: []
       }
     },
     mounted() {
@@ -111,8 +114,18 @@
         .then(function (response) {
           // 获取成功后
           console.log(response.data);
-          that.locationAddress = response.data.name;
+          that.locationAddress = response.data;
+          /**
+           * 得到详细定位后获取商铺列表
+           */
+          req.get('shopping/restaurants' , {latitude: response.data.latitude, longitude: response.data.longitude})
+            .then(function (response) {
+              // 获取成功后
+              console.log(response.data);
+              that.locationRestaurant = response.data;
+            });
         });
+
 
     },
     methods: {
