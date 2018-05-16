@@ -41,6 +41,7 @@
         console.log(addr);
         const geohash = addr.geohash;
         this.$router.push({ path: '/entry', query: { geohash }}) // -> /user
+        this.$store.commit('EMIT_GEOHASH', geohash);
       }
     }
   }

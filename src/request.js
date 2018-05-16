@@ -84,6 +84,9 @@ export default {
         method: 'get',
         url,
         params: param,
+        transformResponse: [(data) => {
+          return JSON.parse(data)
+        }],
         cancelToken: new CancelToken(c => {
           cancel = c
         })

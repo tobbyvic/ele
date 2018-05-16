@@ -46,9 +46,26 @@
     <section class="entry_content">
       <ul>
         <li v-for="restaurant in locationRestaurant" :key="restaurant.id">
-          {{ restaurant.name }}
+          <img :src="resBaseImgurl + restaurant.image_path"/>
+          <div class="entry_content_div">
+            <div class="entry_content_div--top">
+              <p>{{ restaurant.name }}</p>
+              <span>
+                <span v-for="item in restaurant.supports" :key="item.id">{{item.icon_name}}</span>
+              </span>
+
+            </div>
+            <div class="entry_content_div--middle">
+              <p>{{ restaurant.name }}</p>
+            </div>
+            <div class="entry_content_div--bottom">
+              <p>{{ restaurant.name }}</p>
+            </div>
+          </div>
+
         </li>
       </ul>
+
     </section>
     <!--bottom nav-->
     <bottom-nav class="entry_bottom"></bottom-nav>
@@ -79,14 +96,17 @@
         foodstuff2: [],
         baseImgurl: 'https://fuss10.elemecdn.com',
         locationAddress: {},
-        locationRestaurant: []
+        locationRestaurant: [],
+        resBaseImgurl: '//elm.cangdu.org/img/'
       }
     },
+    computed: {},
     mounted() {
 
       console.log(this.$route.query);
       const geohash = this.$route.query.geohash;
       const that = this;
+
       /**
        * 初始化食品分类
        * @type {mounted}
@@ -113,12 +133,12 @@
       req.get('v2/pois/' + geohash)
         .then(function (response) {
           // 获取成功后
-          console.log(response.data);
+          console.log(response);
           that.locationAddress = response.data;
           /**
            * 得到详细定位后获取商铺列表
            */
-          req.get('shopping/restaurants' , {latitude: response.data.latitude, longitude: response.data.longitude})
+          req.get('shopping/restaurants', {latitude: response.data.latitude, longitude: response.data.longitude})
             .then(function (response) {
               // 获取成功后
               console.log(response.data);
@@ -160,6 +180,7 @@
     width: 100%;
     top: 0;
     left: 0;
+    z-index: 2;
   }
 
   .entry_header--inside {
@@ -206,6 +227,65 @@
     margin-top: 3.35rem;
     flex-direction: column;
     margin-bottom: 0.5rem;
+  }
+
+  /**
+  content
+   */
+  .entry_content {
+    background-color: #fff;
+    width: 100%;
+    flex-direction: column;
+    bottom: 0px;
+  }
+
+  .entry_content ul {
+    width: 100%;
+    font-size: 0.9rem;
+    color: #3190e8;
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  .entry_content li {
+    width: 100%;
+    text-align: center;
+    font-size: 0.5rem;
+    padding: 20px 20px;
+    border-bottom: 1px solid #CCCCCC;
+    /*flex*/
+    display: flex;
+    /*flex-direction: column;*/
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    -webkit-justify-content: center;
+    justify-content: left;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    -webkit-align-items: center;
+    align-items: left;
+  }
+
+  .entry_content li img {
+    width: 4rem;
+    height: 4rem;
+  }
+
+  .entry_content_div {
+    width: 100%;
+  }
+
+  .entry_content_div div {
+    display: flex;
+  }
+
+  .entry_content_div--top {
+    justify-content: space-between;
+
+  }
+  .entry_content_div--top span{
+    /*justify-content: space-between;*/
+    /*justify-self: right;*/
   }
 
   /*swiper*/

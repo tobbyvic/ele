@@ -5,56 +5,18 @@ import Qs from 'qs'
 
 Vue.use(Vuex)
 
-// 创建axios实例，便于直接在store中进行使用
-const VueAxios = axios.create({
-  baseURL: 'http://yjhapi.agxx.club/iweb/',
-  transformRequest: [function (data) {
-    return Qs.stringify(data)
-  }],
-  transformResponse: [(data) => {
-    let res = data.slice(1)
-    return JSON.parse(res)
-  }]
-});
-
 const state = {
   // Home.vue传递的数据
-  homePara: {
-    par: "index_new",
-    type: 0,
-    tsort: "new",
-    tech_type: "",
-    user_id: "", // 选填
-    page: 1
-  },
-  resPara: {},
-  // QueryDetail要传递的数据
-  QueryPara: {
-    topic_id: ""
-  }
+  geohash: {}
 }
 
 const getters = {
-  GetUserPara: state => {
-    return JSON.parse(sessionStorage.userInfo)
-  }
 }
 
 const mutations = {
   // *********************Home.vue***********************
-  POST_TOPICLIST() {
-    VueAxios.get('topic/topicList', {
-      params: state.homePara
-    })
-      .then((response) => {
-        // 返回的json字符串，转换为object
-        let res = response.data;
-        state.resPara = res.data;
-        console.log(state.homePara);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+  EMIT_GEOHASH(state, payload) {
+    state.geohash = payload
   },
   //“最热” or “最新”
   EMIT_TSORT(state, obj) {

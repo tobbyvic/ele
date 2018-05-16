@@ -3,6 +3,20 @@ import Qs from 'qs'
 
 export default {
   install(Vue, options) {
+    /**
+     * 将axios挂载到全局对象
+     * @type {AxiosInstance}
+     */
+    Vue.prototype.$http = axios.create({
+      baseURL: 'http://cangdu.org:8001/',
+      transformRequest: [function (data) {
+        return Qs.stringify(data)
+      }],
+      transformResponse: [(data) => {
+        // let res = data.slice(1)
+        return JSON.parse(data)
+      }]
+    });
 
     /**
      * 将一个数组分成几个同等长度的数组
