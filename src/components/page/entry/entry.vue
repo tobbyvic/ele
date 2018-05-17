@@ -1,19 +1,17 @@
 <template>
   <div class="entry">
     <!--header-->
-    <div class="entry_header">
-      <div :span="24" class="entry_header--inside">
-        <div class="entry_header--inside_div">
-          <i class="el-icon-search"></i>
-        </div>
-        <div class="entry_header--inside_location">
-          {{ locationAddress.name }}
-        </div>
-        <div class="entry_header--inside_div">
-          登录|注册
-        </div>
-      </div>
-    </div>
+    <entry-header :locationAddress="locationAddress">
+      <template slot="icon">
+        <i class="el-icon-search"></i>
+      </template>
+      <template slot="content">
+        {{ locationAddress.name }}
+      </template>
+      <template slot="corner">
+        登录|注册
+      </template>
+    </entry-header>
     <!--top-->
     <section class="entry_top">
       <!-- Slider main container -->
@@ -84,21 +82,25 @@
   /**
    * 这两个必须都要引入
    */
+  // swiper
   import Swiper from 'swiper';
   import "swiper/dist/css/swiper.min.css";
   import "swiper/dist/js/swiper.min.js";
-
-  import req from '@/request'
-
-  import BottomNav from './children/BottomNav'
   import StarRate from 'vue-cute-rate'
+  // req
+  import req from '@/request'
+  // 引入子组件部分
+  import BottomNav from './children/BottomNav'
+  import EntryHeader from './children/EntryHeader'
+
 
 
   export default {
     name: "entry",
     components: {
       BottomNav,
-      StarRate
+      StarRate,
+      EntryHeader
     },
     data() {
       return {
@@ -181,52 +183,7 @@
 </script>
 
 <style>
-  /**
-  header
-   */
-  .entry_header {
-    background: #2A85E5;
-    height: 3.35rem;
-    position: fixed;
-    width: 100%;
-    top: 0;
-    left: 0;
-    z-index: 2;
-  }
 
-  .entry_header--inside {
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-
-  .entry_header--inside_div {
-    padding: 0 10px;
-    color: #ffffff;
-  }
-
-  .entry_header--inside_div a {
-    color: #ffffff;
-  }
-
-  .entry_header--inside_location {
-    padding: 0 10px;
-    color: #ffffff;
-    position: absolute;
-    width: 50%;
-    left: 50%;
-    top: 50%;
-    transform: translateX(-50%) translateY(-50%);
-    -webkit-transform: translateX(-50%) translateY(-50%);
-    -moz-transform: translateX(-50%) translateY(-50%);
-    -ms-transform: translateX(-50%);
-
-    /*文本不换行，超出部分用省略号表示*/
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
 
   /**
   top
@@ -313,6 +270,7 @@
     border-radius: 0.2rem;
     margin-left: 0.1rem;
   }
+
   #fengniao {
     color: #fff;
     background-color: #3190e8;
@@ -338,8 +296,9 @@
   .star-main div {
     margin-left: -4px;
   }
+
   .star-main i {
-  /*//注意这里使用了!important*/
+    /*//注意这里使用了!important*/
     font-size: 1rem !important;
   }
 

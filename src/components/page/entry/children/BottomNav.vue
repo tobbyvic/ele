@@ -191,10 +191,6 @@
     data() {
       return {
         navList: [
-          {id: 0, title: "外卖"},
-          {id: 1, title: "搜索"},
-          {id: 2, title: "订单"},
-          {id: 3, title: "我的"}
         ]
       }
     },
