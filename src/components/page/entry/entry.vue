@@ -56,10 +56,16 @@
 
             </div>
             <div class="entry_content_div--middle">
-              <p>{{ restaurant.name }}</p>
+              <p> ¥20起送/ {{ restaurant.piecewise_agent_fee.tips }}</p>
+              <span>
+                <star-rate  :count="5" :disabled="true" v-model="num" class=""/>
+              </span>
             </div>
             <div class="entry_content_div--bottom">
-              <p>{{ restaurant.name }}</p>
+              <p> ¥20起送/ {{ restaurant.piecewise_agent_fee.tips }}</p>
+              <span>
+                {{ restaurant.distance }}/{{ restaurant.order_lead_time }}
+              </span>
             </div>
           </div>
 
@@ -83,12 +89,14 @@
   import req from '@/request'
 
   import BottomNav from './children/BottomNav'
+  import StarRate from 'vue-cute-rate'
 
 
   export default {
     name: "entry",
     components: {
-      BottomNav: BottomNav
+      BottomNav,
+      StarRate
     },
     data() {
       return {
@@ -97,7 +105,8 @@
         baseImgurl: 'https://fuss10.elemecdn.com',
         locationAddress: {},
         locationRestaurant: [],
-        resBaseImgurl: '//elm.cangdu.org/img/'
+        resBaseImgurl: '//elm.cangdu.org/img/',
+        num: 3
       }
     },
     computed: {},
@@ -277,15 +286,54 @@
 
   .entry_content_div div {
     display: flex;
+    align-items: center;
+    /*padding-left: 5px;*/
   }
 
+  /*top*/
   .entry_content_div--top {
     justify-content: space-between;
 
   }
+  .entry_content_div--top p {
+    color: #333;
+    font-weight: 700;
+    font-size: 1rem;
+  }
   .entry_content_div--top span{
-    /*justify-content: space-between;*/
-    /*justify-self: right;*/
+    font-size: 0.5rem;
+    color: #999;
+    border: 0.025rem solid #f1f1f1;
+    border-radius: 0.08rem;
+    margin-left: 0.1rem;
+  }
+  /*middle*/
+  .entry_content_div--middle span{
+    margin-left: 1rem;
+  }
+  .sss {
+    margin-left: 4px;
+  }
+  .star-main div {
+    margin-left: -4px;
+  }
+
+
+
+
+  /*bottom*/
+  .entry_content_div--bottom {
+    justify-content: space-between;
+
+  }
+  .entry_content_div--bottom p {
+    font-size: 0.5rem;
+    color: #999;
+  }
+  .entry_content_div--bottom span{
+    font-size: 0.35rem;
+    color: #2A85E5;
+
   }
 
   /*swiper*/
