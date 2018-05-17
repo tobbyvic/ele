@@ -51,14 +51,16 @@
             <div class="entry_content_div--top">
               <p>{{ restaurant.name }}</p>
               <span>
+                <span id="fengniao">蜂鸟专送</span>
+                <span id="zhunshida">准时达</span>
                 <span v-for="item in restaurant.supports" :key="item.id">{{item.icon_name}}</span>
               </span>
 
             </div>
             <div class="entry_content_div--middle">
-              <p> ¥20起送/ {{ restaurant.piecewise_agent_fee.tips }}</p>
+              <p> 月售 {{ restaurant.recent_order_num }} 单</p>
               <span>
-                <star-rate  :count="5" :disabled="true" v-model="num" class=""/>
+                <star-rate :count="5" :disabled="true" v-model="restaurant.rating" class=""/>
               </span>
             </div>
             <div class="entry_content_div--bottom">
@@ -280,8 +282,10 @@
     height: 4rem;
   }
 
+  /*右侧部分*/
   .entry_content_div {
     width: 100%;
+    margin-left: 0.3rem;
   }
 
   .entry_content_div div {
@@ -295,42 +299,62 @@
     justify-content: space-between;
 
   }
+
   .entry_content_div--top p {
     color: #333;
     font-weight: 700;
     font-size: 1rem;
   }
-  .entry_content_div--top span{
+
+  .entry_content_div--top span {
     font-size: 0.5rem;
     color: #999;
     border: 0.025rem solid #f1f1f1;
-    border-radius: 0.08rem;
+    border-radius: 0.2rem;
     margin-left: 0.1rem;
   }
+  #fengniao {
+    color: #fff;
+    background-color: #3190e8;
+    border: 0.1rem solid #3190e8;
+  }
+
+  #zhunshida {
+    color: #3190e8;
+    border: 0.08rem solid #3190e8;
+  }
+
   /*middle*/
-  .entry_content_div--middle span{
+  .entry_content_div--middle {
+    justify-content: space-between;
+
+  }
+
+  .entry_content_div--middle span {
     margin-left: 1rem;
+    font-size: 0.5rem;
   }
-  .sss {
-    margin-left: 4px;
-  }
+
   .star-main div {
     margin-left: -4px;
   }
-
-
-
+  .star-main i {
+  /*//注意这里使用了!important*/
+    font-size: 1rem !important;
+  }
 
   /*bottom*/
   .entry_content_div--bottom {
     justify-content: space-between;
 
   }
+
   .entry_content_div--bottom p {
     font-size: 0.5rem;
     color: #999;
   }
-  .entry_content_div--bottom span{
+
+  .entry_content_div--bottom span {
     font-size: 0.35rem;
     color: #2A85E5;
 
