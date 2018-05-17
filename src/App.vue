@@ -12,6 +12,10 @@
 
 <style lang="scss">
   @import './style/common';
+  html {
+    overflow-y: scroll;
+    overflow-x: hidden;
+  }
 
   /*适配iphone5*/
   @media screen and (max-width: 320px){

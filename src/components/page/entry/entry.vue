@@ -14,31 +14,24 @@
     </entry-header>
     <!--top-->
     <section class="entry_top">
-      <!-- Slider main container -->
-      <div class="swiper-container">
-        <!-- Additional required wrapper -->
-        <div class="swiper-wrapper">
-          <!-- Slides -->
-          <div class="swiper-slide">
-            <ul>
-              <li v-for="food in foodstuff1" :key="food.id">
-                <img :src="baseImgurl + food.image_url" width="60%"/>
-                {{ food.title }}
-              </li>
-            </ul>
-          </div>
-          <div class="swiper-slide">
-            <ul>
-              <li v-for="food in foodstuff2" :key="food.id">
-                <img :src="baseImgurl + food.image_url" width="60%"/>
-                {{ food.title }}
-              </li>
-            </ul>
-          </div>
-        </div>
-        <!-- Add Pagination -->
-        <div class="swiper-pagination swiper-container--bottom"></div>
-      </div>
+      <category-swiper>
+        <template slot="foodstuff1">
+          <ul>
+            <li v-for="food in foodstuff1" :key="food.id">
+              <img :src="baseImgurl + food.image_url" width="60%"/>
+              {{ food.title }}
+            </li>
+          </ul>
+        </template>
+        <template slot="foodstuff2">
+          <ul>
+            <li v-for="food in foodstuff2" :key="food.id">
+              <img :src="baseImgurl + food.image_url" width="60%"/>
+              {{ food.title }}
+            </li>
+          </ul>
+        </template>
+      </category-swiper>
     </section>
     <!--restaurant content-->
     <section class="entry_content">
@@ -82,17 +75,13 @@
   /**
    * 这两个必须都要引入
    */
-  // swiper
-  import Swiper from 'swiper';
-  import "swiper/dist/css/swiper.min.css";
-  import "swiper/dist/js/swiper.min.js";
   import StarRate from 'vue-cute-rate'
   // req
   import req from '@/request'
   // 引入子组件部分
   import BottomNav from './children/BottomNav'
   import EntryHeader from './children/EntryHeader'
-
+  import CategorySwiper from './children/CategorySwiper'
 
 
   export default {
@@ -100,7 +89,8 @@
     components: {
       BottomNav,
       StarRate,
-      EntryHeader
+      EntryHeader,
+      CategorySwiper
     },
     data() {
       return {
@@ -138,7 +128,7 @@
           //     el: '.swiper-pagination',
           //   }
           // });
-          that.createSwiper();
+          // that.createSwiper();
         });
       /**
        * 根据经纬度详细定位
@@ -261,6 +251,12 @@
     color: #333;
     font-weight: 700;
     font-size: 1rem;
+    width: 10px;
+    /*文本不换行，超出部分用省略号表示*/
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+
   }
 
   .entry_content_div--top span {
@@ -317,65 +313,6 @@
     font-size: 0.35rem;
     color: #2A85E5;
 
-  }
-
-  /*swiper*/
-  .swiper-container {
-    width: 100%;
-    height: 100%;
-  }
-
-  .swiper-slide {
-    /*text-align: center;*/
-    /*font-size: 18px;*/
-    /*background: #fff;*/
-    /*!* Center slide text vertically *!*/
-    display: -webkit-box;
-    display: -ms-flexbox;
-    display: -webkit-flex;
-    display: flex;
-    /*-webkit-box-pack: center;*/
-    /*-ms-flex-pack: center;*/
-    /*-webkit-justify-content: center;*/
-    /*justify-content: center;*/
-    /*-webkit-box-align: center;*/
-    /*-ms-flex-align: center;*/
-    /*-webkit-align-items: center;*/
-    /*align-items: center;*/
-  }
-
-  .swiper-slide ul {
-    width: 100%;
-    font-size: 0.9rem;
-    color: #3190e8;
-    display: flex;
-    flex-wrap: wrap;
-    border-top: 1px solid #e4e4e4;
-    border-left: 1px solid #e4e4e4;
-  }
-
-  .swiper-slide li {
-    width: 25%;
-    text-align: center;
-    font-size: 0.5rem;
-    padding: 10px 0;
-    border-right: 1px solid #e4e4e4;
-    border-bottom: 1px solid #e4e4e4;
-    display: flex;
-    flex-direction: column;
-    -webkit-box-pack: center;
-    -ms-flex-pack: center;
-    -webkit-justify-content: center;
-    justify-content: center;
-    -webkit-box-align: center;
-    -ms-flex-align: center;
-    -webkit-align-items: center;
-    align-items: center;
-
-    /*文本不换行，超出部分用省略号表示*/
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
   }
 
   /**
