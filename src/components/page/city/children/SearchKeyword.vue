@@ -19,16 +19,25 @@
        * @param addr
        * @constructor
        */
-      ADDRESS_ENTRANCE: function (addr) {
+      ADDRESS_ENTRANCE(addr) {
         console.log(addr);
         // 添加到sessionStorage历史记录
-        let addrStr = JSON.stringify(addr);
-        sessionStorage.setItem(addr.name,addrStr);
+        this.EMIT_ADDRESSHISTORY(addr);
+
         // 转到entry页面
         const geohash = addr.geohash;
         this.$router.push({ path: '/entry', query: { geohash }}) // -> /user
         this.$store.commit('EMIT_GEOHASH', geohash);
+      },
+      /**
+       * 添加到sessionStorage历史记录
+       * @param addr
+       * @constructor
+       */
+      EMIT_ADDRESSHISTORY(addr) {
+        this.$store.commit('EMIT_ADDRESSHISTORY',addr);
       }
+
     }
   }
 </script>

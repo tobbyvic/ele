@@ -1,26 +1,31 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import axios from 'axios'
-import Qs from 'qs'
 
 Vue.use(Vuex)
 
 const state = {
-  // Home.vue传递的数据
-  geohash: {}
+  // 当前address的坐标
+  geohash: {},
+  //搜索address时的历史记录
+  historyObject: {
+    addressHistory: []
+  }
 }
 
-const getters = {
-}
+const getters = {}
 
 const mutations = {
-  // *********************Home.vue***********************
+  // 提交geohash
   EMIT_GEOHASH(state, payload) {
     state.geohash = payload
   },
-  //“最热” or “最新”
-  EMIT_TSORT(state, obj) {
-    state.homePara.tsort = obj.tsort;
+  // 提交address的搜索历史
+  EMIT_ADDRESSHISTORY(state, payload) {
+    state.historyObject = JSON.parse(sessionStorage.getItem('historyObject'))
+
+    state.historyObject.addressHistory.push(payload);
+    let para = JSON.stringify(state.historyObject);
+    sessionStorage.setItem('historyObject', para);
   },
   //0.全部 1.经验分享 2.入门学习 3.成果分享
   EMIT_TYPE(state, obj) {

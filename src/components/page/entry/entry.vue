@@ -251,7 +251,7 @@
     color: #333;
     font-weight: 700;
     font-size: 1rem;
-    width: 10px;
+    width: 4rem;
     /*文本不换行，超出部分用省略号表示*/
     overflow: hidden;
     text-overflow: ellipsis;
