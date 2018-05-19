@@ -73,8 +73,8 @@
         }
       },
       EMPTY_HISTORY: function () {
-        this.historyList = [];
         this.$storeObject.removeStore('historyList');
+        this.INIT_HISTORY();
       },
       /**
        * 如果搜索框不为空就发起ajax请求搜索关键字的结果
@@ -103,16 +103,31 @@
        * @constructor
        */
       ADDRESS_ENTRANCE(addr) {
-        console.log(addr);
-        // 添加到historyList
 
-        this.historyList.push(addr)
-        this.$storeObject.setStore('historyList',this.historyList);
+
+        const geohash = addr.geohash;
 
         // 转到entry页面
-        const geohash = addr.geohash;
         this.$router.push({ path: '/entry', query: { geohash }}) // -> /user
         this.$store.commit('EMIT_GEOHASH', geohash);
+
+        //判断是否是重复的记录，不重复的话添加到historyList
+        console.log(addr);
+        let checkFlag = false;
+        if (this.historyList.length) {
+          this.historyList.forEach((element) => {
+            if(element.geohash == geohash) {
+              checkFlag = true;
+              return false //这里只是return里面的箭头函数
+            }
+          });
+        }
+        if(checkFlag) {
+          return false
+        } else {
+          this.historyList.push(addr)
+          this.$storeObject.setStore('historyList',this.historyList);
+        }
       }
 
     }
