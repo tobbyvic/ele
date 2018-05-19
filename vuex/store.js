@@ -6,11 +6,11 @@ Vue.use(Vuex)
 const state = {
   // 当前address的坐标
   geohash: {},
-  //搜索address时的历史记录
+  //address的历史记录
   historyObject: {
     addressHistory: []
   }
-}
+};
 
 const getters = {}
 
@@ -21,11 +21,23 @@ const mutations = {
   },
   // 提交address的搜索历史
   EMIT_ADDRESSHISTORY(state, payload) {
-    state.historyObject = JSON.parse(sessionStorage.getItem('historyObject'))
+    // 提交搜索历史时，先将addressHistory置为session的值
+    if (sessionStorage.getItem('historyObject') == null) {
+      console.log("目前历史为空");
+      state.historyObject.addressHistory.length = 0;
+    } else {
+      state.historyObject.addressHistory = JSON.parse(sessionStorage.getItem('historyObject')).addressHistory;
+    }
+    // 判断是提交历史，还是清空历史
+    if (payload == "empty") {
+      state.historyObject.addressHistory.length = 0;
+      sessionStorage.removeItem('historyObject');
+    } else {
+      state.historyObject.addressHistory.push(payload);
+      // 将处理过的addressHistoty赋给sessionStorage
+      sessionStorage.setItem('historyObject', JSON.stringify(state.historyObject));
+    }
 
-    state.historyObject.addressHistory.push(payload);
-    let para = JSON.stringify(state.historyObject);
-    sessionStorage.setItem('historyObject', para);
   },
   //0.全部 1.经验分享 2.入门学习 3.成果分享
   EMIT_TYPE(state, obj) {

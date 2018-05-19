@@ -35,7 +35,8 @@
        * @constructor
        */
       EMIT_ADDRESSHISTORY(addr) {
-        this.$store.commit('EMIT_ADDRESSHISTORY',addr);
+        console.log('kkkkkkkkkkkk');
+        this.$store.commit('EMIT_ADDRESSHISTORY', addr);
       }
 
     }

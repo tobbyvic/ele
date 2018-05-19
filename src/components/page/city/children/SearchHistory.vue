@@ -2,18 +2,16 @@
   <div class="search-history">
     <header>搜索历史</header>
     <section>
-      <div class="search-history_content">
+      <div class="search-history_content" v-if="emptyFlag">
         <ul class="search-history_list">
           <li v-for="address in searchHistory" :key="" @click="ENTRY_PAGE(address)">
             <h4>{{ address.name }}</h4>
             <p>{{ address.address }}</p>
           </li>
         </ul>
+        <el-button plain class="search-history_empty_btn" @click="EMPTY_HISTORY">清空所有</el-button>
       </div>
-      <div class="search-history_empty">
-        <el-button plain class="search-history_empty_btn" v-if="true">清空所有</el-button>
-        <div id="search-history_tip" v-else>当前没有任何条目!</div>
-      </div>
+      <div id="search-history_tip" v-else>当前没有任何条目!</div>
 
     </section>
   </div>
@@ -23,31 +21,39 @@
   export default {
     name: "search-history",
     data() {
-      return {}
+      return {
+        emptyFlag: true
+      }
     },
     computed: {
-      emptyFlag: {
-        get() {
-          if (this.$store.state.historyObject.addressHistory.length == 0) {
-            return false
-          } else {
-            return true
-          }
-        },
-        set(item) {
-          return item
-        }
-      },
       /**
        * 从sessionStorage中获取searchHistory
        * @returns {Array}
        */
       searchHistory: function () {
-        let obj = JSON.parse(sessionStorage.getItem('historyObject'))
-        return obj.addressHistory
+        if (sessionStorage.getItem('historyObject') == null) {
+          return false
+        } else {
+          const res = JSON.parse(sessionStorage.getItem('historyObject')).addressHistory;
+          return res
+        }
       }
     },
+    mounted() {
+      this.INIT_VIEW();
+    },
     methods: {
+      /**
+       * 页面判断
+       * @constructor
+       */
+      INIT_VIEW() {
+        if (sessionStorage.getItem('historyObject') == null) {
+          this.emptyFlag = false;
+        } else {
+          this.emptyFlag = true;
+        }
+      },
       /**
        * 点击历史记录的条目
        * @param addr
@@ -65,6 +71,7 @@
        */
       EMPTY_HISTORY() {
         this.$store.commit('EMIT_ADDRESSHISTORY', 'empty');
+        this.INIT_VIEW();
       }
 
     }
