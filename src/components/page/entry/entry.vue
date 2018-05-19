@@ -107,7 +107,7 @@
     mounted() {
 
       console.log(this.$route.query);
-      const geohash = this.$route.query.geohash;
+      const geohash = this.$storeObject.getStore("geohash");
       const that = this;
 
       /**

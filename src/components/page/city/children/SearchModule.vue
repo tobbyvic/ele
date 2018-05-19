@@ -103,8 +103,6 @@
        * @constructor
        */
       ADDRESS_ENTRANCE(addr) {
-
-
         const geohash = addr.geohash;
 
         // 转到entry页面

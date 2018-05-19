@@ -153,19 +153,19 @@
       </defs>
     </svg>
     <ul>
-      <li @click="$router.push({path: '/entry', query: {geohash}})">
+      <li @click="$router.push({path: '/entry', query: { geohash: $storeObject.getStore('geohash') }})">
         <svg class="bottom-nav--icon">
           <use xmlns:xlink="http://www.w3.org/1999/xlink" :xlink:href="$route.path.indexOf('entry') !== -1? '#entryActive' : '#entry'"></use>
         </svg>
         外卖
       </li>
-      <li @click="">
+      <li @click="$router.push('/find')">
         <svg class="bottom-nav--icon">
-          <use xmlns:xlink="http://www.w3.org/1999/xlink" :xlink:href="$route.path.indexOf('search') !== -1? '#findActive' : '#find'"></use>
+          <use xmlns:xlink="http://www.w3.org/1999/xlink" :xlink:href="$route.path.indexOf('find') !== -1? '#findActive' : '#find'"></use>
         </svg>
         搜索
       </li>
-      <li @click="">
+      <li @click="$router.push('/order')">
         <svg class="bottom-nav--icon">
           <use xmlns:xlink="http://www.w3.org/1999/xlink" :xlink:href="$route.path.indexOf('order') !== -1? '#orderActive' : '#order'"></use>
         </svg>
