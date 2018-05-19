@@ -4,7 +4,7 @@
     <section>
       <div class="search-history_content" v-if="emptyFlag">
         <ul class="search-history_list">
-          <li v-for="address in searchHistory" :key="" @click="ENTRY_PAGE(address)">
+          <li v-for="address in historyList" :key="" @click="ENTRY_PAGE(address)">
             <h4>{{ address.name }}</h4>
             <p>{{ address.address }}</p>
           </li>
@@ -20,9 +20,12 @@
 <script>
   export default {
     name: "search-history",
+    props: ['historyList'],
     data() {
       return {
-        emptyFlag: true
+        emptyFlag: true,
+        // 历史记录的条目
+
       }
     },
     computed: {
@@ -31,15 +34,17 @@
        * @returns {Array}
        */
       searchHistory: function () {
-        if (sessionStorage.getItem('historyObject') == null) {
-          return false
-        } else {
-          const res = JSON.parse(sessionStorage.getItem('historyObject')).addressHistory;
-          return res
-        }
+        // if (sessionStorage.getItem('historyObject') == null) {
+        //   return false
+        // } else {
+        //   const res = JSON.parse(sessionStorage.getItem('historyObject')).addressHistory;
+        //   return res
+        // }
+
+
       }
     },
-    mounted() {
+    created() {
       this.INIT_VIEW();
     },
     methods: {
@@ -48,11 +53,13 @@
        * @constructor
        */
       INIT_VIEW() {
-        if (sessionStorage.getItem('historyObject') == null) {
-          this.emptyFlag = false;
-        } else {
-          this.emptyFlag = true;
-        }
+        // if (sessionStorage.getItem('historyObject') == null) {
+        //   this.emptyFlag = false;
+        // } else {
+        //   this.emptyFlag = true;
+        // }
+        // 从storage中获取历史条目
+        this.historyList = JSON.parse(this.$storeObject.getStore('historyList'));
       },
       /**
        * 点击历史记录的条目

@@ -4,6 +4,27 @@ import Qs from 'qs'
 export default {
   install(Vue, options) {
     /**
+     * 设置一个离线存储方法的对象
+     * @type {{setStore: function(*=, *=), getStore: function(*=), removeStore: function(*=)}}
+     */
+    Vue.prototype.$storeObject = {
+      setStore: (name, content) => {
+        if (!name) return;
+        if (typeof content !== 'string') {
+          content = JSON.stringify(content);
+        }
+        window.localStorage.setItem(name, content);
+      },
+      getStore: (name) => {
+        if (!name) return;
+        return window.localStorage.getItem(name);
+      },
+      removeStore: (name )=> {
+        if (!name) return;
+        window.localStorage.removeItem(name);
+      }
+    };
+    /**
      * 将axios挂载到全局对象
      * @type {AxiosInstance}
      */

@@ -22,7 +22,9 @@
       ADDRESS_ENTRANCE(addr) {
         console.log(addr);
         // 添加到sessionStorage历史记录
-        this.EMIT_ADDRESSHISTORY(addr);
+        // this.EMIT_ADDRESSHISTORY(addr);
+
+        this.$storeObject.setStore
 
         // 转到entry页面
         const geohash = addr.geohash;
