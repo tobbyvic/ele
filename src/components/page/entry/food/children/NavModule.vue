@@ -35,8 +35,9 @@
       <section v-show="flag === 'category'" class="category_container sort_detail_type">
         <section class="category_left">
           <ul>
-            <li>
-              aaaaa
+            <li v-for="type in restaurantCategory">
+              <img :src="GET_IMGPATH(type.image_url)"/>
+              {{ type.name }}
             </li>
           </ul>
         </section>
@@ -91,12 +92,25 @@
 </template>
 
 <script>
+  // req
+  import req from '@/request'
+
   export default {
     name: "nav-module",
     data() {
       return {
-        flag: ""
+        flag: "",
+        restaurantCategory: [],
       }
+    },
+    created() {
+      const that = this;
+      req.get('shopping/v2/restaurant/category')
+        .then(function (response) {
+          // 获取成功后
+          console.log(response.data instanceof Array);
+          that.restaurantCategory = response.data;
+        });
     },
     methods: {
       /**
@@ -110,6 +124,9 @@
         } else {
           this.flag = flag;
         }
+      },
+      GET_IMGPATH: function (path) {
+        return this.$getImgPath(path);
       }
     }
   }
@@ -133,6 +150,7 @@
     border-bottom: 0.05rem solid #e4e4e4;
     z-index: 2;
   }
+
   /*为元素清除浮动*/
   .nav-module_all:after {
     display: block;
@@ -164,7 +182,9 @@
     align-items: center;
   }
 
-  /*点击下拉按钮后样式改变*/
+  /**
+   点击下拉按钮后样式改变
+    */
   .nav_module_part_title {
     color: #3190e8;
   }
@@ -174,21 +194,11 @@
     fill: #3190e8;
   }
 
-  .sort_icon{
+  .sort_icon {
     vertical-align: middle;
     transition: all .3s;
-    fill:#666;
+    fill: #666;
     margin-left: 5px;
-  }
-
-  /*展开的内容*/
-  .category_container {
-    width: 100%;
-    position: absolute;
-    top: 2.2rem;
-    background-color: #fff;
-    border-bottom: 1px solid #e4e4e4;
-    z-index: 1;
   }
 
   /*transition过渡效果*/
@@ -200,6 +210,64 @@
   .showlist-enter, .showlist-leave-active {
     opacity: 0;
     transform: translateY(-100%);
+  }
+
+  /**
+   展开页内部的内容
+    */
+  .category_container {
+    width: 100%;
+    position: absolute;
+    top: 2.2rem;
+    background-color: #fff;
+    border-bottom: 1px solid #e4e4e4;
+    z-index: 1;
+    display: flex;
+    height: 22.5rem;
+    overflow-y: auto;
+  }
+
+  .category_left, .category_right {
+    padding: 0;
+    margin: 0;
+    width: 50%;
+    display: inline-flex;
+  }
+
+  .category_left {
+    background-color: #f1f1f1;
+  }
+
+  .category_left ul {
+    width: 100%;
+    font-size: 0.9rem;
+    color: #3190e8;
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  .category_left li {
+    width: 100%;
+    height: 2.5rem;
+    text-align: center;
+    font-size: 0.5rem;
+    padding: 0.5rem 0;
+    display: flex;
+    flex-direction: wrap;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    -webkit-justify-content: center;
+    justify-content: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    -webkit-align-items: center;
+    align-items: center;
+  }
+
+  .category_left img {
+    width: 1rem;
+    height: 1rem;
+    display: inline-flex;
   }
 
 </style>
