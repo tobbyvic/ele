@@ -9,6 +9,12 @@ import entry from '@/components/page/entry/entry'
 import find from '@/components/page/entry/find'
 import order from '@/components/page/entry/order'
 
+
+/**
+ * 引入entry进入后的一些组件
+ */
+import food from '@/components/page/entry/food/food'
+
 Vue.use(Router)
 
 export default new Router({
@@ -31,6 +37,7 @@ export default new Router({
       path: '/cities/:id',
       component: city
     },
+    //*****************************
     /**
      * 首页entry
      */
@@ -51,6 +58,14 @@ export default new Router({
     {
       path: '/order',
       component: order
+    },
+    //*****************************
+    /**
+     * food 分类
+     */
+    {
+      path: '/food',
+      component: food
     }
   ]
 });

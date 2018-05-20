@@ -110,22 +110,6 @@
         });
     },
     methods: {
-      /**
-       * 初始化swiper
-       */
-      createSwiper() {
-        const swiper = new Swiper('.swiper-container', {
-          pagination: {
-            el: '.swiper-pagination',
-          },
-          paginationClickable: true,
-          speed: 600,
-          autoplay: 4000,
-          onTouchEnd: function () {
-            swiper.startAutoplay()
-          }
-        })
-      }
     }
   }
 </script>

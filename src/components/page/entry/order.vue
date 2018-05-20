@@ -1,5 +1,5 @@
 <template>
-  <div class="find">
+  <div class="order">
     <entry-header>
       <template slot="icon">
         <i class="el-icon-search"></i>
