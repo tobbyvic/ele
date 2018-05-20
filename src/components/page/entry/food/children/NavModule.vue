@@ -103,9 +103,7 @@
   .nav-module_part {
     margin: 0px;
     float: left;
-    width: 33.3%;
-    padding: 0.2rem 0;
-    border-bottom: 1px solid #e4e4e4;
+    width: 33.33%;
   }
 
   .nav-module_part_container {
@@ -115,7 +113,9 @@
     justify-items: center;
     justify-content: center;
     align-items: center;
-    height: 1.5rem;
+    height: 2.2rem;
+    padding: 0.3rem 0;
+    border-bottom: 0.05rem solid #e4e4e4;
   }
 
   /*展开的内容*/
@@ -125,6 +125,7 @@
     top: 1.9rem;
     background-color: #fff;
     border-bottom: 1px solid #e4e4e4;
+    z-index: -1;
   }
 
   /*transition过渡效果*/
