@@ -35,7 +35,7 @@
       <section v-show="flag === 'category'" class="category_container sort_detail_type">
         <section class="category_left">
           <ul>
-            <li v-for="type in restaurantCategory">
+            <li v-for="type in restaurantCategory" @click="RIGHT_TO(type)" :class="{category_left_active: activeFlag === type.name}">
               <img :src="GET_IMGPATH(type.image_url)"/>
               {{ type.name }}
             </li>
@@ -43,8 +43,8 @@
         </section>
         <section class="category_right">
           <ul>
-            <li>
-              bbbbb
+            <li v-for="sub in sub_categories" @click="">
+              {{ sub.name }}
             </li>
           </ul>
         </section>
@@ -101,6 +101,9 @@
       return {
         flag: "",
         restaurantCategory: [],
+        sub_categories: [],
+        //判断哪一条目被点击
+        activeFlag: "异国料理"
       }
     },
     created() {
@@ -110,6 +113,7 @@
           // 获取成功后
           console.log(response.data instanceof Array);
           that.restaurantCategory = response.data;
+          that.sub_categories = response.data[0].sub_categories;
         });
     },
     methods: {
@@ -125,8 +129,20 @@
           this.flag = flag;
         }
       },
+      /**
+       * 将image_url处理一下
+       * @param path
+       * @returns {string}
+       * @constructor
+       */
       GET_IMGPATH: function (path) {
         return this.$getImgPath(path);
+      },
+
+      RIGHT_TO: function (type) {
+        this.sub_categories = type.sub_categories;
+        // 将该条目变为active,即背景填充为白色
+        this.activeFlag = type.name;
       }
     }
   }
@@ -232,13 +248,15 @@
     margin: 0;
     width: 50%;
     display: inline-flex;
+    overflow-y: auto;
+    align-items: flex-start;
   }
 
   .category_left {
     background-color: #f1f1f1;
   }
 
-  .category_left ul {
+  .category_left ul,.category_right ul {
     width: 100%;
     font-size: 0.9rem;
     color: #3190e8;
@@ -246,7 +264,7 @@
     flex-wrap: wrap;
   }
 
-  .category_left li {
+  .category_left li,.category_right li {
     width: 100%;
     height: 2.5rem;
     text-align: center;
@@ -270,4 +288,7 @@
     display: inline-flex;
   }
 
+  .category_left_active {
+    background-color: #ffffff;
+  }
 </style>
