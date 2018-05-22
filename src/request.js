@@ -65,7 +65,7 @@ axios.interceptors.response.use(response => {
   } else {
     error.message = "连接到服务器失败"
   }
-  message.error(error)
+  message.error(error);
   return Promise.resolve(error.response)
 })
 

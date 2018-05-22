@@ -82,7 +82,7 @@
           </section>
           <section class="category_right">
             <ul>
-              <li v-for="sub in sub_categories" @click="">
+              <li v-for="sub in sub_categories" @click="GET_RESTAURANT_BY_CATEGORY_ID(sub)">
                 {{ sub.name }}
                 {{ sub.count }}
               </li>
@@ -194,22 +194,31 @@
        * 根据经纬度详细定位
        */
       req.get('v2/pois/' + geohash)
-        .then(function (response) {
+        .then((response) => {
           // 获取成功后
           console.log(response);
           that.locationAddress = response.data;
-          /**
-           * 得到详细定位后获取商铺列表
-           */
-          req.get('shopping/restaurants', {latitude: response.data.latitude, longitude: response.data.longitude})
-            .then(function (response) {
-              // 获取成功后
-              console.log(response.data);
-              that.locationRestaurant = response.data;
-            });
+          return response.data
+        }).then(() => {
+          that.GET_RESTAURANT();
         });
     },
     methods: {
+      /**
+       * 将根据请求的关键字得到对应的restaurant
+       */
+      GET_RESTAURANT(para) {
+        const location = this.locationAddress;
+        const that = this;
+        const reqPara = {latitude: location.latitude, longitude: location.longitude, ...para};
+        console.log(reqPara);
+        req.get('shopping/restaurants', reqPara)
+          .then((response) => {
+            // 获取成功后
+            console.log(response.data);
+            that.locationRestaurant = response.data;
+          })
+      },
       /**
        * 根据flag的值切换下拉的视图
        * @param flag
@@ -231,11 +240,22 @@
       GET_IMGPATH: function (path) {
         return this.$getImgPath(path);
       },
-
+      /**
+       * 将该条目变为active,即背景填充为白色
+       * @param type
+       * @constructor
+       */
       RIGHT_TO: function (type) {
         this.sub_categories = type.sub_categories;
         // 将该条目变为active,即背景填充为白色
         this.activeFlag = type.name;
+      },
+      /**
+       * GET_RESTAURANT_BY_CATEGORY_ID
+       * @constructor
+       */
+      GET_RESTAURANT_BY_CATEGORY_ID(sub) {
+        this.GET_RESTAURANT({restaurant_category_ids: [sub.id]})
       }
     }
   }
