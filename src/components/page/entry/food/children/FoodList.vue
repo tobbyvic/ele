@@ -36,6 +36,16 @@
       </symbol>
     </svg>
 
+    <!--EntryHeader-->
+    <entry-header>
+      <template slot="icon">
+        <i class="el-icon-arrow-left"></i>
+      </template>
+      <template slot="content">
+        {{ title }}
+      </template>
+    </entry-header>
+    <!--Nav-->
     <div class="nav-module">
       <div class="nav-module_all" :class="{}">
         <!--分类-->
@@ -114,21 +124,21 @@
             配送方式
           </p>
           <ul class="filtrate_container_list">
-            <li>
+            <li :class="{filtrate_list_active: delivery_mode.indexOf(3) !== -1}" @click="SWITCH_DELIVERY_MODE(3)">
               <span>蜂鸟专送</span>
             </li>
           </ul>
           <p>
             商家属性（可以多选）
           </p>
-          <ul class="filtrate_container_list">
-            <li v-for="filtrateItem in filtrateList">
+          <ul class="filtrate_container_list" >
+            <li v-for="filtrateItem in filtrateList" :class="{filtrate_list_active: supportArr.indexOf(filtrateItem.id) !== -1}" @click="SWITCH_SUPPORT(filtrateItem.id)">
               <span>{{ filtrateItem.text }}</span>
             </li>
           </ul>
           <div class="filtrate_container_btn">
-            <el-button plain size="mini">清空</el-button>
-            <el-button type="primary" size="mini">确认</el-button>
+            <el-button plain size="mini" @click="EMPTY_FILTRATE">清空</el-button>
+            <el-button type="primary" size="mini" @click="SUBMIT_FILTRATE">确认</el-button>
           </div>
 
         </section>
@@ -143,11 +153,13 @@
   // req
   import req from '@/request'
   import ListModule from '@/components/page/entry/children/ListModule'
+  import EntryHeader from '@/components/page/entry/children/EntryHeader'
 
   export default {
     name: "nav-module",
     components: {
-      ListModule
+      ListModule,
+      EntryHeader
     },
     data() {
       return {
@@ -157,9 +169,10 @@
          */
         locationRestaurant: [],
         flag: "",
+        title: "全部餐饮",
         para: {
           restaurant_category_ids: [],
-          order_by: 4
+          order_by: 4,
         },
         /**
          * 分类
@@ -184,11 +197,16 @@
          * 筛选
          */
         filtrateList: [
-          {id: 1, text: "外卖报"},
-          {id: 1, text: "准时达"},
-          {id: 1, text: "奥特曼"},
-        ]
+          {id: 7, text: "外卖保"},
+          {id: 9, text: "准时达"},
+          {id: 4, text: "开发票"},
+          {id: 3, text: "在线付"}
+        ],
+        supportArr: [],
+        delivery_mode: []
       }
+    },
+    computed: {
     },
     created() {
       const that = this;
@@ -270,8 +288,15 @@
        */
       GET_RESTAURANT_BY_CATEGORY_ID(sub) {
         this.para.restaurant_category_ids = [sub.id];
+        this.title = sub.name;
         this.GET_RESTAURANT(this.para);
       },
+
+
+      
+
+
+
       /**
        * 将该条目变为active
        * @param text
@@ -299,6 +324,51 @@
             this.para.order_by = 3;
             break
         }
+        this.GET_RESTAURANT(this.para);
+      },
+      /**
+       * 点击切换样式,"配送方式"
+       * @param id
+       * @constructor
+       */
+      SWITCH_DELIVERY_MODE(id) {
+        if (this.delivery_mode.indexOf(id) !== -1){
+          //如果发现元素已存在，删除元素，样式也会改变
+          this.delivery_mode = [];
+        } else {
+          //不存在则添加样式
+          this.delivery_mode.push(id);
+        }
+      },
+      /**
+       * 点击切换样式,"商家属性"
+       * @param id
+       * @constructor
+       */
+      SWITCH_SUPPORT(id) {
+        if (this.supportArr.indexOf(id) !== -1){
+          //如果发现元素已存在，删除元素，样式也会改变
+          this.supportArr.splice(this.supportArr.findIndex(item => item === id), 1);
+        } else {
+          //不存在则添加样式
+          this.supportArr.push(id);
+        }
+      },
+      /**
+       * 清空所有选中的样式
+       * @constructor
+       */
+      EMPTY_FILTRATE() {
+        this.delivery_mode = [];
+        this.supportArr = [];
+      },
+      /**
+       * 提交选中的筛选选项
+       * @constructor
+       */
+      SUBMIT_FILTRATE() {
+        this.para.delivery_mode = this.delivery_mode;
+        this.para.support_ids  = this.supportArr;
         this.GET_RESTAURANT(this.para);
       }
     }
@@ -437,7 +507,7 @@
     color: #666;
     padding: 0.5rem 0;
     display: flex;
-    flex-direction: wrap;
+    flex-direction: row;
     -webkit-box-pack: center;
     -ms-flex-pack: center;
     -webkit-justify-content: center;
@@ -488,7 +558,7 @@
   }
 
   .sort_container_content_active {
-    background-color: aqua;
+    background-color: #CCCCCC;
   }
 
   /*filtrate*/
@@ -518,6 +588,10 @@
   .filtrate_container_list li {
     display: inline-flex;
     justify-content: center;
+  }
+
+  .filtrate_list_active {
+    color: aqua;
   }
 
   .filtrate_container_list span {

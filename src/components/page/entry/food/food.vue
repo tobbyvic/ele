@@ -1,14 +1,6 @@
 <template>
   <div class="food">
-    <!--EntryHeader-->
-    <entry-header>
-      <template slot="icon">
-        <i class="el-icon-arrow-left"></i>
-      </template>
-      <template slot="content">
-        {{ }}
-      </template>
-    </entry-header>
+
     <!--NavModule-->
     <food-list></food-list>
 
