@@ -95,12 +95,13 @@
         <section v-show="flag === 'sort'" class="sort_container">
           <section class="sort_container_content">
             <ul>
-              <li v-for="sortItem in sort">
+              <li v-for="sortItem in sort" @click="MAKE_SORT_ITEM_ACTIVE(sortItem.text)"
+                  :class="{sort_container_content_active: sortActive === sortItem.text}">
                 <svg>
                   <use xmlns:xlink="http://www.w3.org/1999/xlink" v-bind:xlink:href="sortItem.id">
                   </use>
                 </svg>
-                <span>智能排序</span>
+                <span>{{ sortItem.text }}</span>
               </li>
             </ul>
           </section>
@@ -150,25 +151,38 @@
     },
     data() {
       return {
-        //分类的页面列表
-        sort: [
-          {id: "#default", text: "智能排序"},
-          {id: "#distance", text: "智能排序"},
-          {id: "#hot", text: "智能排序"},
-          {id: "#price", text: "智能排序"},
-          {id: "#speed", text: "智能排序"},
-          {id: "#rating", text: "智能排序"},
-        ],
-        //餐馆列表
-        locationRestaurant: [],
 
+        /**
+         * 主要
+         */
+        locationRestaurant: [],
         flag: "",
+        para: {
+          restaurant_category_ids: [],
+          order_by: 4
+        },
+        /**
+         * 分类
+         */
         restaurantCategory: [],
         sub_categories: [],
         //判断哪一条目被点击
         activeFlag: "异国料理",
-
-        //filtrate
+        /**
+         * 排序
+         */
+        sort: [
+          {id: "#default", text: "智能排序"},
+          {id: "#distance", text: "距离最近"},
+          {id: "#hot", text: "销量最高"},
+          {id: "#price", text: "起送价最低"},
+          {id: "#speed", text: "配送速度最快"},
+          {id: "#rating", text: "评分最高"},
+        ],
+        sortActive: "",
+        /**
+         * 筛选
+         */
         filtrateList: [
           {id: 1, text: "外卖报"},
           {id: 1, text: "准时达"},
@@ -200,8 +214,8 @@
           that.locationAddress = response.data;
           return response.data
         }).then(() => {
-          that.GET_RESTAURANT();
-        });
+        that.GET_RESTAURANT();
+      });
     },
     methods: {
       /**
@@ -255,7 +269,37 @@
        * @constructor
        */
       GET_RESTAURANT_BY_CATEGORY_ID(sub) {
-        this.GET_RESTAURANT({restaurant_category_ids: [sub.id]})
+        this.para.restaurant_category_ids = [sub.id];
+        this.GET_RESTAURANT(this.para);
+      },
+      /**
+       * 将该条目变为active
+       * @param text
+       * @constructor
+       */
+      MAKE_SORT_ITEM_ACTIVE(text) {
+        this.sortActive = text;
+        switch (text) {
+          case "智能排序":
+            this.para.order_by = 4;
+            break
+          case "距离最近":
+            this.para.order_by = 5;
+            break
+          case "销量最高":
+            this.para.order_by = 6;
+            break
+          case "起送价最低":
+            this.para.order_by = 1;
+            break
+          case "配送速度最快":
+            this.para.order_by = 2;
+            break
+          case "评分最高":
+            this.para.order_by = 3;
+            break
+        }
+        this.GET_RESTAURANT(this.para);
       }
     }
   }
@@ -443,6 +487,10 @@
     height: 1.2rem;
   }
 
+  .sort_container_content_active {
+    background-color: aqua;
+  }
+
   /*filtrate*/
   .filtrate_container {
     width: 100%;
@@ -488,5 +536,6 @@
    */
   .food-list_list {
     margin-top: 3.35rem;
+    padding-top: 2.2rem;
   }
 </style>
