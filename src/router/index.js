@@ -6,7 +6,7 @@ import Router from 'vue-router'
 import home from '@/components/page/home/home'
 import city from '@/components/page/city/city'
 import entry from '@/components/page/entry/entry'
-import find from '@/components/page/entry/find'
+import find from '@/components/page/entry/find/find'
 import order from '@/components/page/entry/order'
 
 

@@ -19,7 +19,7 @@
       <section>
         <div class="search-history_content" v-if="!(historyList.length == 0)">
           <ul class="search-history_list">
-            <li v-for="address in historyList" :key="" @click="ENTRY_PAGE(address)">
+            <li v-for="address in historyList" :key="" @click="ADDRESS_ENTRANCE(address)">
               <h4>{{ address.name }}</h4>
               <p>{{ address.address }}</p>
             </li>

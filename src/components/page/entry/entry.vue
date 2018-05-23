@@ -17,7 +17,7 @@
       <category-swiper>
         <template slot="foodstuff1">
           <ul>
-            <li v-for="food in foodstuff1" :key="food.id">
+            <li v-for="food in foodstuff1" :key="food.id" @click="JUMPTO_FOOD(food)">
               <img :src="baseImgurl + food.image_url" width="60%"/>
               {{ food.title }}
             </li>
@@ -25,7 +25,7 @@
         </template>
         <template slot="foodstuff2">
           <ul>
-            <li v-for="food in foodstuff2" :key="food.id">
+            <li v-for="food in foodstuff2" :key="food.id" @click="JUMPTO_FOOD(food)">
               <img :src="baseImgurl + food.image_url" width="60%"/>
               {{ food.title }}
             </li>
@@ -110,6 +110,14 @@
         });
     },
     methods: {
+      /**
+       * 将点击的餐馆相关参数传递给food页面
+       * @param food
+       * @constructor
+       */
+      JUMPTO_FOOD(food) {
+        this.$router.push({ path: '/food', query: { restaurant_category_id : food.id, title: food.title }});
+      }
     }
   }
 </script>

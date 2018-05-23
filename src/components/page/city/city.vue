@@ -27,8 +27,6 @@
 
 <script>
   import req from '@/request'
-  // import searchHistory from './children/searchHistory'
-  // import searchKeyword from './children/searchKeyword'
   import SearchModule from './children/SearchModule'
 
 

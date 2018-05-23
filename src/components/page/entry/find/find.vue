@@ -8,23 +8,25 @@
         搜索商家或美食
       </template>
     </entry-header>
-    <search-module></search-module>
+    <search-restaurant></search-restaurant>
     <!--bottom nav-->
     <bottom-nav class="entry_bottom"></bottom-nav>
   </div>
 </template>
 
 <script>
-  import SearchModule from '../city/children/SearchModule'
-  import BottomNav from './children/BottomNav'
-  import EntryHeader from './children/EntryHeader'
+  import SearchModule from '@/components/page/city/children/SearchModule'
+  import BottomNav from '@/components/page/entry/children/BottomNav'
+  import EntryHeader from '@/components/page/entry/children/EntryHeader'
+  import SearchRestaurant from './children/SearchRestaurant'
 
   export default {
     name: "find",
     components: {
       SearchModule,
       BottomNav,
-      EntryHeader
+      EntryHeader,
+      SearchRestaurant
     }
   }
 </script>
