@@ -72,6 +72,9 @@
           this.historyList = [];
         }
       },
+      /**
+       * 清空历史数据
+       */
       EMPTY_HISTORY: function () {
         this.$storeObject.removeStore('historyList');
         this.INIT_HISTORY();
