@@ -73,7 +73,8 @@ export default new Router({
      * shop
      */
     {
-      path: '/shop',
+      name: 'shop',
+      path: '/shop/:shopid',
       component: shop
     }
   ]

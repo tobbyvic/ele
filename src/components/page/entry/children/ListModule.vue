@@ -1,7 +1,7 @@
 <template>
   <section class="list-module">
     <ul>
-      <li v-for="restaurant in locationRestaurant" :key="restaurant.id">
+      <li v-for="restaurant in locationRestaurant" :key="restaurant.id" @click="GOTO_SHOP(restaurant)">
         <img :src="resBaseImgurl + restaurant.image_path"/>
         <div class="list-module_div">
           <!--右侧部分上部-->
@@ -46,6 +46,17 @@
     data() {
       return  {
         resBaseImgurl: '//elm.cangdu.org/img/',
+      }
+    },
+    methods: {
+      /**
+       * 定向到餐馆详情页
+       * @param restaurant
+       * @constructor
+       */
+      GOTO_SHOP(restaurant) {
+        const id = restaurant.id;
+        this.$router.push({ path: `/shop/${id}` }) // -> /user/id
       }
     }
   }
