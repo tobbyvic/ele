@@ -43,7 +43,7 @@
       <list-template>
         <template slot="list_template_container_left">
           <ul class="goods_container_name_list">
-            <li v-for="item in goods" class="goods_container_name_list_item" @click="CHOOSE_GOOD(item)">
+            <li v-for="item in goods" class="goods_container_name_list_item" @click="CHOOSE_GOOD(item)" :class="{list_left_active: leftActiveId === item.id}">
               {{ item.name }}
             </li>
           </ul>
@@ -126,6 +126,8 @@
       return {
         //content页面的切换标志位
         activeFlag: 1,
+        //左侧点击切换样式标志位
+        leftActiveId: 2,
         // shop详情
         shopDetail: {},
         //图片url前缀
@@ -141,16 +143,13 @@
         // 选中的goods的foods
         chosedGoodFoods: [],
         // activity
-        activity: {}
+        activity: {},
       }
     },
-    created() {
-
+    mounted() {
       console.log(this.$route.params);
       this.INIT_SHOP();
-      this.INIT_GOODS()
-
-
+      this.INIT_GOODS();
     },
     methods: {
       /**
@@ -183,6 +182,8 @@
             // 获取成功后
             console.log(response.data);
             that.goods = response.data;
+            // 初始化数据
+            that.CHOOSE_GOOD(response.data[0]);
           });
       },
       /**
@@ -202,6 +203,7 @@
         this.chosedGood = good;
         this.chosedGoodFoods = good.foods;
         this.activity = good.activity
+        this.leftActiveId = good.id;
       }
     }
   }
@@ -314,10 +316,18 @@
     flex-flow: column;
   }
 
+  .goods_container_name_list {
+    background-color: #F4F3F4;
+  }
+
+  .list_left_active {
+    background-color: #ffffff;
+  }
+
   .goods_container_name_list_item {
     text-align: center;
     padding: 1rem;
-    border-bottom: 0.02rem solid #CCCCCC;
+    border-bottom: 0.03rem solid #ededed;
     /*文本不换行，超出部分用省略号表示*/
     overflow: hidden;
     text-overflow: ellipsis;
@@ -348,7 +358,7 @@
     display: flex;
     flex: 1;
     padding: 0.3rem;
-    border-bottom: 0.01rem solid #cccccc;
+    border-bottom: 0.03rem solid #ededed;
   }
 
   /*每一行的左右部分*/
@@ -371,6 +381,7 @@
     align-items: center;
     justify-content: space-between;
   }
+
 
   /**
   bottom
@@ -444,5 +455,7 @@
   /*overflow: hidden;*/
   /*visibility: hidden;*/
   /*}*/
+
+
 
 </style>
