@@ -40,22 +40,40 @@
     <!--content-->
 
     <section class="goods_container" v-if="activeFlag">
-      <section class="shop_content_container">
-        <section class="shop_content_container_left">
-          <ul>
-            <li v-for="x in list">
-              {{ x }}
+      <list-template>
+        <template slot="list_template_container_left">
+          <ul class="goods_container_name_list">
+            <li v-for="item in goods" class="goods_container_name_list_item" @click="CHOOSE_GOOD(item)">
+              {{ item.name }}
             </li>
           </ul>
-        </section>
-        <section class="shop_content_container_right">
-          <ul>
-            <li v-for="x in list">
-              {{ x }}{{ x }}
+        </template>
+        <template slot="list_template_container_right">
+          <div class="goods_container_detail_title">
+            <h3>{{ chosedGood.name }}</h3>
+            <p>{{ chosedGood.description }}</p>
+          </div>
+          <ul class="goods_container_detail_list">
+            <li v-for="item in chosedGoodFoods" class="goods_container_detail_list_item">
+              <div class="goods_container_detail_list_item_main">
+                <div class="goods_container_detail_list_item_main--left">
+                  <img :src="resBaseImgurl + item.image_path" class="shop_header_img"/>
+                </div>
+                <div class="goods_container_detail_list_item_main--right">
+                  <h3 style="font-size: 1rem; font-weight: bolder;">{{item.name}}</h3>
+                  <div style="font-size: 0.5rem;color: #999;">{{item.description}}
+                  </div>
+                  <div>{{ item.tips }}</div>
+
+                  <div style="font-size: .8rem;color: #f60;font-weight: bold;">
+                    ￥{{ item.specfoods[0].price }}
+                  </div>
+                </div>
+              </div>
             </li>
           </ul>
-        </section>
-      </section>
+        </template>
+      </list-template>
     </section>
 
 
@@ -90,13 +108,15 @@
 
 <script>
   import SvgExample from '@/components/page/SvgExample'
+  import ListTemplate from '@/components/page/entry/children/ListTemplate'
   // req
   import req from '@/request'
 
   export default {
     name: "shop",
     components: {
-      SvgExample
+      SvgExample,
+      ListTemplate
     },
     data() {
       return {
@@ -110,34 +130,74 @@
         activities: [],
         // shop配送费tips
         tips: "",
-        list: ["ssss", "ssss", "ssss", "ssss", "ssss", "ssss", "ssss", "ssss", "ssss", "ssss", "ssss", "ssss", "ssss", "ssss", "ssss", "ssss", "ssss", "ssss", "ssss", "ssss", "ssss", "ssss", "ssss", "ssss", "ssss", "ssss", "ssss", "ssss", "ssss", "ssss", "ssss", "ssss", "ssss", "ssss"]
+        // 商品goods
+        goods: [],
+        // 左侧选中的goods，右边对应
+        chosedGood: {},
+        // 选中的goods的foods
+        chosedGoodFoods: [],
+        // activity
+        activity: {}
       }
     },
     created() {
-      /**
-       * 初始化shop的信息
-       * 注意：在访问路由相关参数的时候用$route而不是$router
-       */
-      console.log(this.$route.params);
-      const id = this.$route.params.shopid;
-      const that = this;
-      req.get(`shopping/restaurant/${id}`)
-        .then(function (response) {
-          // 获取成功后
-          console.log(response.data);
-          console.log(response.data.activities[0]);
 
-          if (response.data) {
-            //如果返回值
-            that.tips = response.data.piecewise_agent_fee.tips;
-            that.activities = response.data.activities;
-            that.shopDetail = response.data;
-          }
-        });
+      console.log(this.$route.params);
+      this.INIT_SHOP();
+      this.INIT_GOODS()
+
+
     },
     methods: {
+      /**
+       * 初始化顶部shop的信息
+       * 注意：在访问路由相关参数的时候用$route而不是$router
+       */
+      INIT_SHOP() {
+        const id = this.$route.params.shopid;
+        const that = this;
+        req.get(`shopping/restaurant/${id}`)
+          .then(function (response) {
+            // 获取成功后
+            console.log(response.data);
+            if (response.data) {
+              //如果返回值
+              that.tips = response.data.piecewise_agent_fee.tips;
+              that.activities = response.data.activities;
+              that.shopDetail = response.data;
+            }
+          });
+      },
+      /**
+       * 初始化content中商品的的信息
+       */
+      INIT_GOODS() {
+        const id = this.$route.params.shopid;
+        const that = this;
+        req.get('shopping/v2/menu', {restaurant_id: id})
+          .then(function (response) {
+            // 获取成功后
+            console.log(response.data);
+            that.goods = response.data;
+          });
+      },
+      /**
+       * 切换 "商品" 和 "评价"
+       * @param para
+       * @constructor
+       */
       SWITCH_CONTENT(para) {
         this.activeFlag = para;
+      },
+      /**
+       * 选中一个good
+       * @param good
+       * @constructor
+       */
+      CHOOSE_GOOD(good) {
+        this.chosedGood = good;
+        this.chosedGoodFoods = good.foods;
+        this.activity = good.activity
       }
     }
   }
@@ -205,11 +265,12 @@
   top
    */
   .shop_top {
-    height: 3.5rem;
+    height: 3.2rem;
     background-color: #fff;
     position: fixed;
     top: 5.8rem;
     width: 100%;
+    border-bottom: 0.02rem solid #CCCCCC;
   }
 
   .shop_top span {
@@ -235,42 +296,76 @@
     display: -webkit-box;
     display: -ms-flexbox;
     display: flex;
-    -webkit-box-flex: 1;
-    -ms-flex: 1;
-    flex: 1;
     padding-bottom: 3.5rem;
+
     position: absolute;
     /*这句话是个神器，切记*/
-    height: calc(100% - 9.3rem);
+    height: calc(100% - 9rem);
     bottom: 0;
   }
 
-  /*商品部分外层的容器*/
-  .shop_content_container {
+  .goods_container_name_list, .goods_container_detail_list {
     width: 100%;
-    display: -webkit-box;
-    display: -webkit-flex;
-    display: -ms-flexbox;
     display: flex;
-    -webkit-box-flex: 1;
-    -webkit-flex: 1;
-    -ms-flex: 1;
-    flex: 1;
-    position: relative;
+    flex-flow: column;
   }
 
-  /*商品部分里面的左右两个能滑动的列*/
-  .shop_content_container_left, .shop_content_container_right {
-    padding: 0;
-    margin: 0;
-    width: 50%;
-    display: -webkit-inline-box;
-    display: -ms-inline-flexbox;
-    display: inline-flex;
-    overflow-y: auto;
-    -webkit-box-align: start;
-    -ms-flex-align: start;
-    align-items: flex-start;
+  /*.goods_container_detail_list:after {*/
+  /*display: block;*/
+  /*content: "clear";*/
+  /*height: 0;*/
+  /*clear: both;*/
+  /*overflow: hidden;*/
+  /*visibility: hidden;*/
+  /*}*/
+
+  .goods_container_name_list_item {
+    text-align: center;
+    padding: 1rem;
+    border-bottom: 0.02rem solid #CCCCCC;
+    /*文本不换行，超出部分用省略号表示*/
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .goods_container_detail_title {
+    width: 100%;
+    background-color: #F4F3F4;
+    display: flex;
+    padding: 0.7rem;
+    flex-flow: row;
+    align-items: center;
+  }
+
+  .goods_container_detail_title h3 {
+    font-size: 1rem;
+  }
+
+  .goods_container_detail_title p {
+    font-size: 0.6rem;
+    color: #2F2F2F;
+  }
+
+  .goods_container_detail_list_item_main {
+    display: flex;
+    flex: 1;
+    padding: 0.3rem;
+    border-bottom: 0.01rem solid #cccccc;
+  }
+
+  .goods_container_detail_list_item_main--left {
+    padding-right: 0.4rem;
+    display: flex;
+    align-items: center;
+  }
+
+  .goods_container_detail_list_item_main--right {
+    flex: 1;
+    font-size: 0.5rem;
+    display: flex;
+    flex-flow: column;
+    justify-content: center;
   }
 
   /**

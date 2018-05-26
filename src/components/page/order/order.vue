@@ -14,8 +14,8 @@
 </template>
 
 <script>
-  import BottomNav from './children/BottomNav'
-  import EntryHeader from './children/EntryHeader'
+  import BottomNav from '../entry/children/BottomNav'
+  import EntryHeader from '../entry/children/EntryHeader'
 
   export default {
     name: "order",
