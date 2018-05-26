@@ -65,8 +65,12 @@
                   </div>
                   <div>{{ item.tips }}</div>
 
-                  <div style="font-size: .8rem;color: #f60;font-weight: bold;">
-                    ￥{{ item.specfoods[0].price }}
+                  <div class="goods_container_detail_list_item_main--right_price">
+                    <span style="font-size: .8rem;color: #f60;font-weight: bold;">￥{{ item.specfoods[0].price }}</span>
+                    <svg width="1.3rem" height="1.3rem" v-if="true">
+                      <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#add_contact">
+                      </use>
+                    </svg>
                   </div>
                 </div>
               </div>
@@ -310,15 +314,6 @@
     flex-flow: column;
   }
 
-  /*.goods_container_detail_list:after {*/
-  /*display: block;*/
-  /*content: "clear";*/
-  /*height: 0;*/
-  /*clear: both;*/
-  /*overflow: hidden;*/
-  /*visibility: hidden;*/
-  /*}*/
-
   .goods_container_name_list_item {
     text-align: center;
     padding: 1rem;
@@ -329,6 +324,7 @@
     white-space: nowrap;
   }
 
+  /*整个右侧的最上方标题部分*/
   .goods_container_detail_title {
     width: 100%;
     background-color: #F4F3F4;
@@ -347,6 +343,7 @@
     color: #2F2F2F;
   }
 
+  /*整个右侧的每一行的样式*/
   .goods_container_detail_list_item_main {
     display: flex;
     flex: 1;
@@ -354,6 +351,7 @@
     border-bottom: 0.01rem solid #cccccc;
   }
 
+  /*每一行的左右部分*/
   .goods_container_detail_list_item_main--left {
     padding-right: 0.4rem;
     display: flex;
@@ -366,6 +364,12 @@
     display: flex;
     flex-flow: column;
     justify-content: center;
+  }
+
+  .goods_container_detail_list_item_main--right_price {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
   }
 
   /**
