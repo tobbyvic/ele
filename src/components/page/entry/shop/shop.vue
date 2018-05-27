@@ -77,12 +77,13 @@
                     <span style="font-size: .8rem;color: #f60;font-weight: bold;">￥{{ item.specfoods[0].price }}</span>
 
                     <div class="goods_container_detail_list_item_main--right_price_svg">
-                      <svg width="1.3rem" height="1.3rem" v-if="true">
+                      <!-- 减 -->
+                      <svg width="1.3rem" height="1.3rem" v-if="true" @click="DELETE_FOOD(item)">
                         <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#minus_contact">
                         </use>
                       </svg>
                       <span>{{ foodNum[item.item_id] || 0 }}</span>
-
+                      <!-- 加 -->
                       <svg width="1.3rem" height="1.3rem" v-if="true" @click="ADD_FOOD(item)">
                         <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#add_contact">
                         </use>
@@ -157,9 +158,8 @@
         chosedGoodFoods: [],// 选中的goods的foods
         activity: {},// activity
 
-        addingFood: {},// 点击加入按钮时当前的food，为了能在该条目下显示num而创建
         cartRes: [],//最后选中的商品列表
-        foodNum: {}
+        foodNum: {},//购买的food数量的对象
 
       }
     },
@@ -168,11 +168,7 @@
       this.INIT_SHOP();
       this.INIT_GOODS();
     },
-    computed: {
-      lastNum() {
-        return this.addingFood.item_id;
-      }
-    },
+    computed: {},
     methods: {
       /**
        * 初始化顶部shop的信息
@@ -227,11 +223,14 @@
         this.activity = good.activity
         this.leftActiveId = good.id;
       },
+      /**
+       * 添加食物
+       * @param food
+       * @constructor
+       */
       ADD_FOOD(food) {
-        this.addingFood = food;
         let numId = food.item_id;
         console.log(numId);
-        console.log(this.addingFood);
         // 检查一下cart中已经添加了该food没
         let checkRepeat = false;
         // 如果cart中已经有该food，num+1即可
@@ -240,9 +239,10 @@
             element.num += 1;
             checkRepeat = true;
             // this.foodNum[numId] = element.num; 这句话不会触发视图更新
-            this.$set(this.foodNum,numId,element.num);
+            this.$set(this.foodNum, numId, element.num);
           }
         });
+
         // 如果购物车中没有该food，加入该food
         if (!checkRepeat) {
           this.cartRes.push({
@@ -253,11 +253,31 @@
             num: 1
           });
           // this.foodNum[numId] = 1; 这句话不会触发视图更新
-          this.$set(this.foodNum,numId,1);
+          this.$set(this.foodNum, numId, 1);
         }
 
         console.log(this.foodNum);
         console.log(this.cartRes);
+      },
+      /**
+       * 减少食物
+       * @param item
+       * @constructor
+       */
+      DELETE_FOOD(food) {
+        let numId = food.item_id;
+        // 如果cart中已经有该food，num+1即可
+        this.cartRes.forEach((element) => {
+          if (element.chosedFood.item_id === food.item_id) {
+            if (element.num > 0) {
+              element.num -= 1;
+              // this.foodNum[numId] = element.num; 这句话不会触发视图更新
+              this.$set(this.foodNum, numId, element.num);
+            } else {
+              console.log("不能再减了我的哥，要倒贴咋地");
+            }
+          }
+        });
       }
     }
   }
