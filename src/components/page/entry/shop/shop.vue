@@ -46,7 +46,12 @@
           <ul class="goods_container_name_list">
             <li v-for="item in goods" class="goods_container_name_list_item" @click="CHOOSE_GOOD(item)"
                 :class="{list_left_active: leftActiveId === item.id}">
-              {{ item.name }}
+              <div class="">
+                {{ item.name }}
+                <span class="goods_container_name_list_item_logo" v-if="foodsGoodNum[item.id]">
+                  {{ foodsGoodNum[item.id] }}
+                </span>
+              </div>
             </li>
           </ul>
         </template>
@@ -160,6 +165,7 @@
 
         cartRes: [],//最后选中的商品列表
         foodNum: {},//购买的food数量的对象
+        foodsGoodNum: {}//购买的food所隶属于的商品分类的总数量
 
       }
     },
@@ -229,6 +235,7 @@
        * @constructor
        */
       ADD_FOOD(food) {
+        // let numCateId = 0;
         let numId = food.item_id;
         console.log(numId);
         // 检查一下cart中已经添加了该food没
@@ -258,6 +265,17 @@
 
         console.log(this.foodNum);
         console.log(this.cartRes);
+
+        // 对其shop的分类上面的数字进行操作
+        let numCateId = this.leftActiveId;
+        if (this.foodsGoodNum[numCateId]) {
+          let last = this.foodsGoodNum[numCateId];
+          this.$set(this.foodsGoodNum, numCateId, last + 1);
+        } else {
+          this.$set(this.foodsGoodNum, numCateId, 1);
+        }
+
+
       },
       /**
        * 减少食物
@@ -277,7 +295,13 @@
               console.log("不能再减了我的哥，要倒贴咋地");
             }
           }
+
         });
+
+
+        // 对其shop的分类上面的数字进行操作，减法
+        let numCateId = this.leftActiveId;
+        this.$set(this.foodsGoodNum, numCateId, this.foodsGoodNum[numCateId] - 1);
       }
     }
   }
@@ -405,10 +429,23 @@
     text-align: center;
     padding: 1rem;
     border-bottom: 0.03rem solid #ededed;
+    position: relative;
     /*文本不换行，超出部分用省略号表示*/
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+  }
+
+  .goods_container_name_list_item_logo {
+    position: absolute;
+    margin-top: -0.4rem;
+    margin-left: 0.2rem;
+    width: 1rem;
+    height: 1rem;
+    line-height: 1rem;
+    background: red;
+    border-radius: 50%;
+    font-size: 0.5rem;
   }
 
   /**
