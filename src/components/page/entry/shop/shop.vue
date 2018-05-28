@@ -43,12 +43,12 @@
       <list-template>
         <!--左边栏商品分类-->
         <template slot="list_template_container_left">
-          <ul class="goods_container_name_list">
-            <li v-for="item in goods" class="goods_container_name_list_item" @click="CHOOSE_GOOD(item)"
+          <ul class="goods-left_list">
+            <li v-for="item in goods" class="goods-left_list_item" @click="CHOOSE_GOOD(item)"
                 :class="{list_left_active: leftActiveId === item.id}">
               <div class="">
                 {{ item.name }}
-                <span class="goods_container_name_list_item_logo" v-if="foodsGoodNum[item.id]">
+                <span class="goods-left_list_item_logo" v-if="foodsGoodNum[item.id]">
                   {{ foodsGoodNum[item.id] }}
                 </span>
               </div>
@@ -58,36 +58,41 @@
         <!--右边部分具体商品部分-->
         <template slot="list_template_container_right">
           <!--右边部分顶部的title部分-->
-          <div class="goods_container_detail_title">
+          <div class="goods-right_title">
             <h3>{{ chosedGood.name }}</h3>
             <p>{{ chosedGood.description }}</p>
           </div>
           <!--右边部分列表部分-->
-          <ul class="goods_container_detail_list">
-            <li v-for="item in chosedGoodFoods" class="goods_container_detail_list_item">
+          <ul class="goods-right_list">
+            <li v-for="item in chosedGoodFoods" class="goods-right_list_item">
               <!--每一条目中的元素-->
-              <div class="goods_container_detail_list_item_main">
+              <div class="goods-right_list_item_main">
                 <!--左边图片部分-->
-                <div class="goods_container_detail_list_item_main--left">
+                <div class="goods-right_list_item_main--left">
                   <img :src="resBaseImgurl + item.image_path" class="shop_header_img"/>
                 </div>
                 <!--右边几行的商品描述-->
-                <div class="goods_container_detail_list_item_main--right">
+                <div class="goods-right_list_item_main--right">
                   <h3 style="font-size: 1rem; font-weight: bolder;">{{item.name}}</h3>
                   <div style="font-size: 0.5rem;color: #999;">{{item.description}}
                   </div>
                   <div>{{ item.tips }}</div>
                   <!--价格-->
-                  <div class="goods_container_detail_list_item_main--right_price">
+                  <div class="goods-right_list_item_main--right_price">
                     <span style="font-size: .8rem;color: #f60;font-weight: bold;">￥{{ item.specfoods[0].price }}</span>
 
-                    <div class="goods_container_detail_list_item_main--right_price_svg">
+                    <div class="goods-right_list_item_main--right_price_svg">
                       <!-- 减 -->
-                      <svg width="1.3rem" height="1.3rem" v-if="true" @click="DELETE_FOOD(item)">
-                        <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#minus_contact">
-                        </use>
-                      </svg>
-                      <span>{{ foodNum[item.item_id] || 0 }}</span>
+                      <transition name="slide-fade">
+                        <div class="goods-right_list_item_main--right_price_svg--left" v-if="foodNum[item.item_id]">
+                          <svg width="1.3rem" height="1.3rem" v-if="true" @click="DELETE_FOOD({food:item})">
+                            <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#minus_contact">
+                            </use>
+                          </svg>
+                          <span>{{ foodNum[item.item_id] || 0 }}</span>
+                        </div>
+                      </transition>
+
                       <!-- 加 -->
                       <svg width="1.3rem" height="1.3rem" v-if="true" @click="ADD_FOOD(item)">
                         <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#add_contact">
@@ -113,24 +118,52 @@
     <div class="shop_bottom">
       <div class="shop_bottom--left">
         <div>
-          <span class="shop_bottom_logo">
+          <span class="shop_bottom_logo" @click="switchCart()">
             <svg width="100%" height="100%">
               <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#cart">
               </use>
             </svg>
             <span class="shop_bottom_logo_tip">
-              1
+              {{ sum }}
             </span>
           </span>
-          <p>$</p>
-          <p>配送费：</p>
+          <p>￥{{ sumPrice }}</p>
+          <p>配送费：￥5</p>
         </div>
       </div>
       <div class="shop_bottom--right">
         去结算
       </div>
-
     </div>
+    <!--cart-->
+    <transition name="show-cart">
+      <div class="shop_cart" v-if="showCart">
+        <ul>
+          <li v-for="item in cartRes">
+            <div class="shop_cart_item">
+              <span>{{ item.chosedFood.name }}</span>
+              <span>{{ item.price }}</span>
+              <span class="shop_cart_item--svg">
+              <!-- 减 -->
+              <div class="goods-right_list_item_main--right_price_svg--left">
+                <svg width="1.3rem" height="1.3rem" v-if="true"
+                     @click="DELETE_FOOD({food:item.chosedFood,goodId:item.id})">
+                  <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#minus_contact">
+                  </use>
+                </svg>
+                <span>{{ foodNum[item.chosedFood.item_id] || 0 }}</span>
+              </div>
+                <!-- 加 -->
+              <svg width="1.3rem" height="1.3rem" v-if="true" @click="ADD_FOOD(item.chosedFood)">
+                <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#add_contact">
+                </use>
+              </svg>
+            </span>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </transition>
   </div>
 </template>
 
@@ -148,7 +181,7 @@
     },
     data() {
       return {
-
+        // shop-header部分
         activeFlag: 1,//content页面的切换标志位
         leftActiveId: 2,//左侧点击切换样式标志位
 
@@ -157,15 +190,18 @@
         activities: [],// shop activities
         tips: "",// shop配送费tips
 
+        // content部分
         goods: [],// 商品goods
         chosedGood: {},// 左侧选中的goods，右边对应
 
-        chosedGoodFoods: [],// 选中的goods的foods
+        chosedGoodFoods: [],// 选中的good的foods
         activity: {},// activity
 
         cartRes: [],//最后选中的商品列表
         foodNum: {},//购买的food数量的对象
-        foodsGoodNum: {}//购买的food所隶属于的商品分类的总数量
+        foodsGoodNum: {},//购买的food所隶属于的商品分类的总数量
+
+        showCart: false
 
       }
     },
@@ -174,7 +210,30 @@
       this.INIT_SHOP();
       this.INIT_GOODS();
     },
-    computed: {},
+    computed: {
+      /**
+       * 获取最后的商品总数
+       */
+      sum() {
+        let res = 0;
+        for (let x in this.foodsGoodNum) {
+          res += this.foodsGoodNum[x];
+        }
+        return res
+      },
+      /**
+       * 最后的商品总价
+       */
+      sumPrice() {
+        let res = 0;
+
+        for (const value of this.cartRes) {
+          console.log(value);
+          res += (value.price * value.num);
+        }
+        return res
+      }
+    },
     methods: {
       /**
        * 初始化顶部shop的信息
@@ -237,6 +296,7 @@
       ADD_FOOD(food) {
         // let numCateId = 0;
         let numId = food.item_id;
+        let price = food.specfoods[0].price;
         console.log(numId);
         // 检查一下cart中已经添加了该food没
         let checkRepeat = false;
@@ -257,6 +317,7 @@
             id: this.leftActiveId,
             // food对象
             chosedFood: food,
+            price: price,
             num: 1
           });
           // this.foodNum[numId] = 1; 这句话不会触发视图更新
@@ -274,34 +335,58 @@
         } else {
           this.$set(this.foodsGoodNum, numCateId, 1);
         }
+        console.log(this.foodsGoodNum);
+        console.log(Object.keys(this.foodsGoodNum));
 
 
       },
       /**
        * 减少食物
+       * 这里的参数运用了es6中的解构赋值
        * @param item
        * @constructor
        */
-      DELETE_FOOD(food) {
+      DELETE_FOOD({food, goodId}) {
         let numId = food.item_id;
-        // 如果cart中已经有该food，num+1即可
+        let numCateId = 0;
+        console.log(numId);
+        let deleteFlag = false;
+        // 如果cart中已经有该food，num-1即可
         this.cartRes.forEach((element) => {
           if (element.chosedFood.item_id === food.item_id) {
-            if (element.num > 0) {
-              element.num -= 1;
-              // this.foodNum[numId] = element.num; 这句话不会触发视图更新
-              this.$set(this.foodNum, numId, element.num);
-            } else {
-              console.log("不能再减了我的哥，要倒贴咋地");
+            element.num -= 1;
+            if (element.num === 0) {
+              //数量已归零，在数组中删除该元素
+              deleteFlag = true;
             }
+            // this.foodNum[numId] = element.num; 这句话不会触发视图更新
+            this.$set(this.foodNum, numId, element.num);
           }
-
         });
 
+        // 如果减1后归零，就将其从购物车清单数组中删除
+        if (deleteFlag) {
+          this.cartRes.splice(this.cartRes.findIndex(item => item.chosedFood.item_id === numId), 1);
+        }
 
         // 对其shop的分类上面的数字进行操作，减法
-        let numCateId = this.leftActiveId;
+        if (goodId) {
+          numCateId = goodId;
+        } else {
+          numCateId = this.leftActiveId;
+        }
         this.$set(this.foodsGoodNum, numCateId, this.foodsGoodNum[numCateId] - 1);
+      },
+      /**
+       * 切换购物车的显示和隐藏
+       * @returns {boolean}
+       */
+      switchCart() {
+        if (this.cartRes.length) {
+          this.showCart = !this.showCart
+        } else {
+          return false
+        }
       }
     }
   }
@@ -408,7 +493,7 @@
     bottom: 0;
   }
 
-  .goods_container_name_list, .goods_container_detail_list {
+  .goods-left_list, .goods-right_list {
     width: 100%;
     display: flex;
     flex-flow: column;
@@ -417,7 +502,7 @@
   /**
     整个左侧部分
     **/
-  .goods_container_name_list {
+  .goods-left_list {
     background-color: #F4F3F4;
   }
 
@@ -425,7 +510,7 @@
     background-color: #ffffff;
   }
 
-  .goods_container_name_list_item {
+  .goods-left_list_item {
     text-align: center;
     padding: 1rem;
     border-bottom: 0.03rem solid #ededed;
@@ -436,7 +521,7 @@
     white-space: nowrap;
   }
 
-  .goods_container_name_list_item_logo {
+  .goods-left_list_item_logo {
     position: absolute;
     margin-top: -0.4rem;
     margin-left: 0.2rem;
@@ -452,7 +537,7 @@
   整个右侧部分
   **/
   /*题目部分*/
-  .goods_container_detail_title {
+  .goods-right_title {
     width: 100%;
     background-color: #F4F3F4;
     display: flex;
@@ -461,31 +546,32 @@
     align-items: center;
   }
 
-  .goods_container_detail_title h3 {
+  .goods-right_title h3 {
     font-size: 1rem;
   }
 
-  .goods_container_detail_title p {
+  .goods-right_title p {
     font-size: 0.6rem;
     color: #2F2F2F;
   }
 
   /*整个右侧的每一行的样式*/
-  .goods_container_detail_list_item_main {
+  .goods-right_list_item_main {
     display: flex;
     flex: 1;
     padding: 0.3rem;
     border-bottom: 0.03rem solid #ededed;
   }
 
-  /*每一行的左右部分*/
-  .goods_container_detail_list_item_main--left {
+  /*每一行的左部分*/
+  .goods-right_list_item_main--left {
     padding-right: 0.4rem;
     display: flex;
     align-items: center;
   }
 
-  .goods_container_detail_list_item_main--right {
+  /*每一行的右部分*/
+  .goods-right_list_item_main--right {
     flex: 1;
     font-size: 0.5rem;
     display: flex;
@@ -493,20 +579,44 @@
     justify-content: center;
   }
 
-  .goods_container_detail_list_item_main--right_price {
+  .goods-right_list_item_main--right_price {
     display: flex;
     align-items: center;
     justify-content: space-between;
   }
 
-  /*加减的图标*/
-  .goods_container_detail_list_item_main--right_price_svg {
+  /*加减图标部分*/
+  .goods-right_list_item_main--right_price_svg {
     display: flex;
     /*flex: 1;*/
     align-items: center;
   }
 
-  .goods_container_detail_list_item_main--right_price_svg span {
+  /*点击后会进行显隐的过度部分*/
+  .goods-right_list_item_main--right_price_svg--left {
+    display: flex;
+    /*flex: 1;*/
+    align-items: center;
+  }
+
+  /* 可以设置不同的进入和离开动画 */
+  /* 设置持续时间和动画函数 */
+  .slide-fade-enter-active {
+    transition: all .2s ease;
+  }
+
+  .slide-fade-leave-active {
+    transition: all .2s cubic-bezier(1.0, 0.5, 0.8, 1.0);
+  }
+
+  .slide-fade-enter, .slide-fade-leave-to
+    /* .slide-fade-leave-active for below version 2.1.8 */
+  {
+    transform: translateX(10px);
+    opacity: 0;
+  }
+
+  .goods-right_list_item_main--right_price_svg span {
     padding: 0 0.1rem;
   }
 
@@ -521,6 +631,7 @@
     bottom: 0;
     display: flex;
     color: #ffffff;
+    z-index: 1;
   }
 
   .shop_bottom--left {
@@ -574,14 +685,38 @@
     border-radius: 50%;
   }
 
-  /*.shop_bottom:after {*/
-  /*display: block;*/
-  /*content: "clear";*/
-  /*height: 0;*/
-  /*clear: both;*/
-  /*overflow: hidden;*/
-  /*visibility: hidden;*/
-  /*}*/
+  /*cart*/
+  .shop_cart {
+    position: absolute;
+    width: 100%;
+    bottom: 3.5rem;
+    background-color: #ffffff;
+    z-index: 0;
+    padding-bottom: 1.6rem;
+  }
 
+  .shop_cart_item {
+    padding: 0.5rem;
+    border-top: 0.03rem solid #ededed;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .shop_cart_item--svg {
+    display: inline-flex;
+    justify-content: center;
+    align-content: center;
+  }
+
+  /*transition过渡效果*/
+  .show-cart-enter-active, .show-cart-leave-active {
+    transition: all .3s;
+    transform: translateY(0);
+  }
+
+  .show-cart-enter, .show-cart-leave-active {
+    opacity: 0;
+    transform: translateY(100%);
+  }
 
 </style>
