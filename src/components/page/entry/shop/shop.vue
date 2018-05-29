@@ -3,7 +3,7 @@
     <!--引入svg-->
     <svg-example></svg-example>
     <!--header-->
-    <shop-header></shop-header>
+    <shop-header :shopDetail="shopDetail" :tips="tips"></shop-header>
     <!--top-->
     <div class="shop_top">
       <span>
@@ -86,9 +86,25 @@
       </list-template>
     </section>
 
-
+    <!--评价页面-->
     <section v-else>
-      2
+      <div class="shop_evaluate">
+        <!--综合评价-->
+        <div class="shop_evaluate--overall">
+          <div class="shop_evaluate--overall--left">
+            <span class="shop_evaluate--overall--left_number">{{ shopDetail.rating }}</span>
+            <span class="shop_evaluate--overall--left_text">综合评价</span>
+            <span class="shop_evaluate--overall--left_percent">高于周边商家
+              <span>{{(ratingScoresData.compare_rating*100).toFixed(1)}}%</span>
+              </span>
+          </div>
+          <div class="shop_evaluate--overall--right">
+            <span>服务态度{{ratingScoresData.service_score.toFixed(1)}}</span>
+            <span>菜品评价{{ratingScoresData.food_score.toFixed(1)}}</span>
+            <span>送达时间{{ shopDetail.order_lead_time }}&nbsp;分钟</span>
+          </div>
+        </div>
+      </div>
     </section>
 
     <!--bottom-->
@@ -165,6 +181,11 @@
     },
     data() {
       return {
+        // header部分
+        shopDetail: {},// shop详情
+        tips: "",// shop配送费tips
+
+
         // top部分
         activeFlag: 1,//content页面的切换标志位
         leftActiveId: 2,//左侧点击切换样式标志位
@@ -181,13 +202,18 @@
         foodNum: {},//购买的food数量的对象
         foodsGoodNum: {},//购买的food所隶属于的商品分类的总数量
 
-        showCart: false
+        showCart: false,
+
+        //评价部分
+        ratingScoresData: {}
 
       }
     },
     mounted() {
       console.log(this.$route.params);
       this.INIT_GOODS();
+      this.INIT_SHOP();
+      this.INIT_RATINGSCORES();
     },
     computed: {
       /**
@@ -214,7 +240,40 @@
       }
     },
     methods: {
-
+      /**
+       * 初始化顶部shop的信息
+       * 注意：在访问路由相关参数的时候用$route而不是$router
+       */
+      INIT_SHOP() {
+        const id = this.$route.params.shopid;
+        const that = this;
+        req.get(`shopping/restaurant/${id}`)
+          .then(function (response) {
+            // 获取成功后
+            console.log(response.data);
+            if (response.data) {
+              //如果返回值
+              that.tips = response.data.piecewise_agent_fee.tips;
+              that.shopDetail = response.data;
+            }
+          });
+      },
+      /**
+       * 初始化餐馆的评价分数
+       */
+      INIT_RATINGSCORES() {
+        const id = this.$route.params.shopid;
+        const that = this;
+        req.get(`/ugc/v2/restaurants/${id}/ratings/scores`)
+          .then(function (response) {
+            // 获取成功后
+            console.log(response.data);
+            if (response.data) {
+              //如果返回值
+              that.ratingScoresData = response.data;
+            }
+          });
+      },
       /**
        * 初始化content中商品的的信息
        */
@@ -389,7 +448,7 @@
   .shop_top {
     height: 3.2rem;
     background-color: #fff;
-    position: fixed;
+    /*position: fixed;*/
     top: 5.8rem;
     width: 100%;
     border-bottom: 0.02rem solid #CCCCCC;
@@ -464,6 +523,51 @@
     background: red;
     border-radius: 50%;
     font-size: 0.5rem;
+  }
+
+  /**
+    content中点击评价部分
+     */
+  .shop_evaluate--overall {
+    background-color: #ffffff;
+    padding: 1rem;
+    display: flex;
+  }
+
+  .shop_evaluate--overall--left, .shop_evaluate--overall--right {
+    display: inline-flex;
+    flex-flow: column;
+    width: 50%;
+    text-align: center;
+  }
+
+  .shop_evaluate--overall--left_number {
+    font-size: 1.5rem;
+    color: #f60;
+  }
+
+  .shop_evaluate--overall--left_text {
+    font-size: 0.6rem;
+  }
+
+  .shop_evaluate--overall--left_percent {
+    font-size: 0.8rem;
+  }
+
+  .shop_evaluate--overall--left_percent span {
+    color: #f60;
+  }
+
+  .shop_evaluate--overall--right {
+    text-align: left;
+    /*align-content: center;*/
+    justify-content: center;
+    font-size: 0.9rem;
+  }
+
+  .shop_evaluate--overall--right--inner {
+    display: inline-flex;
+    flex-flow: column;
   }
 
   /**
@@ -548,8 +652,6 @@
     transform: translateX(10px);
     opacity: 0;
   }
-
-
 
   .goods-right_list_item_main--right_price_svg span {
     padding: 0 0.1rem;
@@ -653,6 +755,7 @@
     opacity: 0;
     transform: translateY(100%);
   }
+
   /*遮罩*/
   .screen_cover {
     position: fixed;

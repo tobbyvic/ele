@@ -30,37 +30,23 @@ import req from '@/request'
 
 export default {
   name: "shop-header",
+  props: ['shopDetail','tips'],
   data() {
     return {
-      shopDetail: {},// shop详情
       resBaseImgurl: '//elm.cangdu.org/img/',//图片url前缀
-      activities: [],// shop activities
-      tips: "",// shop配送费tips
+      // activities: [],// shop activities
+      // tips: "",// shop配送费tips
+    }
+  },
+  computed: {
+    activities() {
+      return this.shopDetail.activities;
     }
   },
   mounted() {
-    this.INIT_SHOP();
+    console.log(this.shopDetail);
   },
   methods: {
-    /**
-     * 初始化顶部shop的信息
-     * 注意：在访问路由相关参数的时候用$route而不是$router
-     */
-    INIT_SHOP() {
-      const id = this.$route.params.shopid;
-      const that = this;
-      req.get(`shopping/restaurant/${id}`)
-        .then(function (response) {
-          // 获取成功后
-          console.log(response.data);
-          if (response.data) {
-            //如果返回值
-            that.tips = response.data.piecewise_agent_fee.tips;
-            that.activities = response.data.activities;
-            that.shopDetail = response.data;
-          }
-        });
-    }
   }
 
 }
@@ -70,7 +56,7 @@ export default {
   .shop_header {
     height: 5.8rem;
     background-color: rgba(119, 103, 137, 0.43);
-    position: fixed;
+    /*position: fixed;*/
     width: 100%;
     background: url(https://ws3.sinaimg.cn/large/006tNc79gy1fpezlo2tyqj30hs0budh4.jpg);
     color: #ffffff;
