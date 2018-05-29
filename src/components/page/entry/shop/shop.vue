@@ -3,30 +3,7 @@
     <!--引入svg-->
     <svg-example></svg-example>
     <!--header-->
-    <header class="shop_header">
-      <div class="shop_header_box">
-        <img :src="resBaseImgurl + shopDetail.image_path" class="shop_header_img"/>
-        <div class="shop_header_div">
-          <!--右侧部分上部-->
-          <div class="shop_header_div--top">
-            <h3>{{ shopDetail.name }}</h3>
-          </div>
-          <!--右侧部分中部-->
-          <div class="shop_header_div--middle">
-            <p> {{ tips }}</p>
-          </div>
-          <!--右侧部分下部-->
-          <div class="shop_header_div--bottom">
-            <p> {{ shopDetail.promotion_info }} </p>
-          </div>
-        </div>
-      </div>
-      <div class="shop_header_activity">
-        <span v-for="activity in activities">
-          {{ activity.description }}
-        </span>
-      </div>
-    </header>
+    <shop-header></shop-header>
     <!--top-->
     <div class="shop_top">
       <span>
@@ -94,7 +71,7 @@
                       </transition>
 
                       <!-- 加 -->
-                      <svg width="1.3rem" height="1.3rem" v-if="true" @click="ADD_FOOD(item)">
+                      <svg width="1.3rem" height="1.3rem" v-if="true" @click="ADD_FOOD({food:item})">
                         <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#add_contact">
                         </use>
                       </svg>
@@ -137,7 +114,7 @@
     </div>
     <!--cart-->
     <transition name="show-cart">
-      <div class="shop_cart" v-if="showCart">
+      <div class="shop_cart" v-if="showCart && sum">
         <ul>
           <li v-for="item in cartRes">
             <div class="shop_cart_item">
@@ -154,7 +131,7 @@
                 <span>{{ foodNum[item.chosedFood.item_id] || 0 }}</span>
               </div>
                 <!-- 加 -->
-              <svg width="1.3rem" height="1.3rem" v-if="true" @click="ADD_FOOD(item.chosedFood)">
+              <svg width="1.3rem" height="1.3rem" v-if="true" @click="ADD_FOOD({food:item.chosedFood,goodId:item.id})">
                 <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#add_contact">
                 </use>
               </svg>
@@ -164,12 +141,18 @@
         </ul>
       </div>
     </transition>
+    <!--遮罩-->
+    <transition name="fade">
+      <div class="screen_cover" v-show="showCart&&cartRes.length" @click="switchCart()"></div>
+    </transition>
   </div>
 </template>
 
 <script>
   import SvgExample from '@/components/page/SvgExample'
   import ListTemplate from '@/components/page/entry/children/ListTemplate'
+
+  import ShopHeader from './children/ShopHeader'
   // req
   import req from '@/request'
 
@@ -177,25 +160,22 @@
     name: "shop",
     components: {
       SvgExample,
-      ListTemplate
+      ListTemplate,
+      ShopHeader
     },
     data() {
       return {
-        // shop-header部分
+        // top部分
         activeFlag: 1,//content页面的切换标志位
         leftActiveId: 2,//左侧点击切换样式标志位
 
-        shopDetail: {},// shop详情
-        resBaseImgurl: '//elm.cangdu.org/img/',//图片url前缀
-        activities: [],// shop activities
-        tips: "",// shop配送费tips
 
         // content部分
+        resBaseImgurl: '//elm.cangdu.org/img/',//图片url前缀
         goods: [],// 商品goods
         chosedGood: {},// 左侧选中的goods，右边对应
 
         chosedGoodFoods: [],// 选中的good的foods
-        activity: {},// activity
 
         cartRes: [],//最后选中的商品列表
         foodNum: {},//购买的food数量的对象
@@ -207,7 +187,6 @@
     },
     mounted() {
       console.log(this.$route.params);
-      this.INIT_SHOP();
       this.INIT_GOODS();
     },
     computed: {
@@ -235,25 +214,7 @@
       }
     },
     methods: {
-      /**
-       * 初始化顶部shop的信息
-       * 注意：在访问路由相关参数的时候用$route而不是$router
-       */
-      INIT_SHOP() {
-        const id = this.$route.params.shopid;
-        const that = this;
-        req.get(`shopping/restaurant/${id}`)
-          .then(function (response) {
-            // 获取成功后
-            console.log(response.data);
-            if (response.data) {
-              //如果返回值
-              that.tips = response.data.piecewise_agent_fee.tips;
-              that.activities = response.data.activities;
-              that.shopDetail = response.data;
-            }
-          });
-      },
+
       /**
        * 初始化content中商品的的信息
        */
@@ -285,7 +246,6 @@
       CHOOSE_GOOD(good) {
         this.chosedGood = good;
         this.chosedGoodFoods = good.foods;
-        this.activity = good.activity
         this.leftActiveId = good.id;
       },
       /**
@@ -293,22 +253,38 @@
        * @param food
        * @constructor
        */
-      ADD_FOOD(food) {
-        // let numCateId = 0;
+      ADD_FOOD({food, goodId}) {
+
         let numId = food.item_id;
         let price = food.specfoods[0].price;
+        let numCateId = 0;
         console.log(numId);
         // 检查一下cart中已经添加了该food没
         let checkRepeat = false;
+
+
         // 如果cart中已经有该food，num+1即可
-        this.cartRes.forEach((element) => {
-          if (element.chosedFood.item_id === food.item_id) {
-            element.num += 1;
+        // this.cartRes.forEach((element) => {
+        //   if (element.chosedFood.item_id === food.item_id) {
+        //     element.num += 1;
+        //     checkRepeat = true;
+        //     // 刷新购物车里该food的数量
+        //     // this.foodNum[numId] = element.num; 这句话不会触发视图更新
+        //     this.$set(this.foodNum, numId, element.num);
+        //   }
+        // });
+
+        // 如果cart中已经有该food，num+1即可
+        for (let [index, elem] of this.cartRes.entries()) {
+          if (elem.chosedFood.item_id === food.item_id) {
             checkRepeat = true;
+            this.cartRes[index].num += 1;
+            // 刷新购物车里该food的数量
             // this.foodNum[numId] = element.num; 这句话不会触发视图更新
-            this.$set(this.foodNum, numId, element.num);
+            this.$set(this.foodNum, numId, this.cartRes[index].num);
+            break;
           }
-        });
+        }
 
         // 如果购物车中没有该food，加入该food
         if (!checkRepeat) {
@@ -324,11 +300,17 @@
           this.$set(this.foodNum, numId, 1);
         }
 
+
         console.log(this.foodNum);
         console.log(this.cartRes);
 
-        // 对其shop的分类上面的数字进行操作
-        let numCateId = this.leftActiveId;
+
+        // 对其shop的分类上面的数字进行操作，加法；判断是在list中点击的加号，还是在购物车里点击的
+        if (goodId) {
+          numCateId = goodId;
+        } else {
+          numCateId = this.leftActiveId;
+        }
         if (this.foodsGoodNum[numCateId]) {
           let last = this.foodsGoodNum[numCateId];
           this.$set(this.foodsGoodNum, numCateId, last + 1);
@@ -351,6 +333,7 @@
         let numCateId = 0;
         console.log(numId);
         let deleteFlag = false;
+
         // 如果cart中已经有该food，num-1即可
         this.cartRes.forEach((element) => {
           if (element.chosedFood.item_id === food.item_id) {
@@ -369,7 +352,7 @@
           this.cartRes.splice(this.cartRes.findIndex(item => item.chosedFood.item_id === numId), 1);
         }
 
-        // 对其shop的分类上面的数字进行操作，减法
+        // 对其shop的分类上面的数字进行操作，减法；判断是在list中点击的加号，还是在购物车里点击的
         if (goodId) {
           numCateId = goodId;
         } else {
@@ -398,56 +381,6 @@
    */
   .shop {
     height: 100vh;
-  }
-
-  .shop_header {
-    height: 5.8rem;
-    background-color: rgba(119, 103, 137, 0.43);
-    position: fixed;
-    width: 100%;
-    background: url(https://ws3.sinaimg.cn/large/006tNc79gy1fpezlo2tyqj30hs0budh4.jpg);
-    color: #ffffff;
-    display: flex;
-    flex-flow: column;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .shop_header_box {
-    width: 100%;
-    display: flex;
-    height: 4rem;
-    padding-left: .6rem;
-  }
-
-  .shop_header_img {
-    width: 4rem;
-    height: 4rem;
-  }
-
-  .shop_header_div {
-    width: 100%;
-  }
-
-  .shop_header_div--top h3 {
-    font-size: 1.1rem;
-    /*文本不换行，超出部分用省略号表示*/
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-
-  .shop_header_div--middle p {
-    font-size: .8rem;
-  }
-
-  .shop_header_div--bottom p {
-    font-size: .8rem;
-  }
-
-  .shop_header_activity {
-    width: 100%;
-    padding-left: .6rem;
   }
 
   /**
@@ -616,6 +549,8 @@
     opacity: 0;
   }
 
+
+
   .goods-right_list_item_main--right_price_svg span {
     padding: 0 0.1rem;
   }
@@ -631,7 +566,7 @@
     bottom: 0;
     display: flex;
     color: #ffffff;
-    z-index: 1;
+    z-index: 3;
   }
 
   .shop_bottom--left {
@@ -691,7 +626,7 @@
     width: 100%;
     bottom: 3.5rem;
     background-color: #ffffff;
-    z-index: 0;
+    z-index: 2;
     padding-bottom: 1.6rem;
   }
 
@@ -718,5 +653,25 @@
     opacity: 0;
     transform: translateY(100%);
   }
+  /*遮罩*/
+  .screen_cover {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: rgba(0, 0, 0, 0.3);
+    z-index: 1;
+  }
+
+  /*遮罩部分的显隐*/
+  .fade-enter-active, .fade-leave-active {
+    transition: opacity .5s;
+  }
+
+  .fade-enter, .fade-leave-active {
+    opacity: 0;
+  }
+
 
 </style>
