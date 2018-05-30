@@ -104,6 +104,27 @@
             <span>送达时间{{ shopDetail.order_lead_time }}&nbsp;分钟</span>
           </div>
         </div>
+
+        <!--评价详细-->
+        <div class="shop_evaluate--detail">
+          <!--评价分类-->
+          <div class="shop_evaluate--detail_category">
+            <ul class="shop_evaluate--detail_category_ul">
+              <li v-for="tag in ratingTags" :key="tag.id">
+                {{ tag.name }}({{ tag.count }})
+              </li>
+            </ul>
+          </div>
+          <!--每条评价-->
+          <div class="shop_evaluate--detail_list">
+            <ul class="shop_evaluate--detail_list_ul">
+              <li v-for="item in ratingList" :key="item._id">
+                {{ item.username }}
+              </li>
+            </ul>
+          </div>
+
+        </div>
       </div>
     </section>
 
@@ -205,7 +226,9 @@
         showCart: false,
 
         //评价部分
-        ratingScoresData: {}
+        ratingScoresData: {},
+        ratingTags: [],
+        ratingList: []
 
       }
     },
@@ -214,6 +237,9 @@
       this.INIT_GOODS();
       this.INIT_SHOP();
       this.INIT_RATINGSCORES();
+      this.INIT_RATING_TAGS();
+      this.INIT_RATING_LIST();
+      // window.addEventListener('scroll', this.INIT_RATING_LIST, true);
     },
     computed: {
       /**
@@ -239,6 +265,7 @@
         return res
       }
     },
+
     methods: {
       /**
        * 初始化顶部shop的信息
@@ -287,6 +314,32 @@
             that.goods = response.data;
             // 初始化数据
             that.CHOOSE_GOOD(response.data[0]);
+          });
+      },
+      /**
+       * 初始化评价分类
+       */
+      INIT_RATING_TAGS() {
+        const id = this.$route.params.shopid;
+        const that = this;
+        req.get(`ugc/v2/restaurants/${id}/ratings/tags`)
+          .then(function (response) {
+            // 获取成功后
+            that.ratingTags = response.data;
+            that.ratingLIST
+          });
+      },
+      /**
+       * 初始化评价列表
+       */
+      INIT_RATING_LIST() {
+        const id = this.$route.params.shopid;
+        const that = this;
+        req.get(`ugc/v2/restaurants/${id}/ratings`, {offset: that.ratingTags.length, limit: 10})
+          .then(function (response) {
+            // 获取成功后
+            const res = response.data;
+            that.ratingList.push(...res);
           });
       },
       /**
@@ -568,6 +621,54 @@
   .shop_evaluate--overall--right--inner {
     display: inline-flex;
     flex-flow: column;
+  }
+
+  /**
+  评价详情部分
+  */
+  .shop_evaluate--detail {
+    background-color: #ffffff;
+    margin-top: 0.6rem;
+    padding: 0.4rem;
+  }
+
+  /*评价分类部分*/
+  .shop_evaluate--detail_category {
+
+  }
+
+  /*清除浮动*/
+  .shop_evaluate--detail_category_ul:after {
+    display: block;
+    content: "clear";
+    height: 0;
+    clear: both;
+    overflow: hidden;
+    visibility: hidden;
+  }
+
+  .shop_evaluate--detail_category_ul li {
+    float: left;
+    padding: 0.3rem;
+    border-radius: 10%;
+    background: #ebf5ff;
+    margin-right: 0.2rem;
+    margin-bottom: 0.2rem;
+  }
+
+  /*评价列表部分*/
+  .shop_evaluate--detail_list {
+    position: absolute;
+    height: 20%;
+    width: 100%;
+    margin-left: -0.4rem;
+    margin-right: -0.4rem;
+    display: flex;
+  }
+
+  .shop_evaluate--detail_list_ul {
+    width: 100%;
+    overflow-y: auto;
   }
 
   /**
