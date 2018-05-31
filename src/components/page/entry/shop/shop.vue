@@ -87,8 +87,8 @@
     </section>
 
     <!--评价页面-->
-    <section v-else>
-      <div class="shop_evaluate">
+    <section v-else class="evaluate_container">
+      <div class="shop_evaluate" ref="evaluate_scroll" v-on:scroll.passive="ON_SCROLL">
         <!--综合评价-->
         <div class="shop_evaluate--overall">
           <div class="shop_evaluate--overall--left">
@@ -118,8 +118,42 @@
           <!--每条评价-->
           <div class="shop_evaluate--detail_list">
             <ul class="shop_evaluate--detail_list_ul">
-              <li v-for="item in ratingList" :key="item._id">
-                {{ item.username }}
+              <li v-for="item in ratingList">
+
+
+
+                <div class="shop_evaluate--detail_item">
+                  <!--左边图片部分-->
+                  <div class="shop_evaluate--detail_list_ul--left">
+                    <img :src="GET_IMGPATH(item.avatar)" class="evaluate_avatar_img"/>
+                  </div>
+                  <!--右边几行的商品描述-->
+                  <div class="shop_evaluate--detail_list_ul--right">
+                    <h3>
+                      <p>{{item.username}}</p>
+                      <p>{{item.rated_at}}</p>
+                    </h3>
+                    <div style="font-size: 0.5rem;color: #999;">
+                      {{item.rating_star}}颗星 &nbsp;
+                      {{item.time_spent_desc}}
+                    </div>
+                    <ul>
+                      <li v-for="x in item.item_ratings" :key="">
+                        <span class="shop_evaluate--detail_list_ul--right_span">
+                          <img :src="GET_IMGPATH(x.image_hash)"/>
+                          <p>{{x.food_name}}</p>
+                        </span>
+                      </li>
+                    </ul>
+                    <!--价格-->
+                    <div class="shop_evaluate--detail_list_ul--right_price">
+
+                    </div>
+                  </div>
+                </div>
+
+
+
               </li>
             </ul>
           </div>
@@ -238,7 +272,7 @@
       this.INIT_SHOP();
       this.INIT_RATINGSCORES();
       this.INIT_RATING_TAGS();
-      this.INIT_RATING_LIST();
+      this.REFRESH_RATING_LIST();
       // window.addEventListener('scroll', this.INIT_RATING_LIST, true);
     },
     computed: {
@@ -267,6 +301,15 @@
     },
 
     methods: {
+      /**
+       * 将image_url处理一下
+       * @param path
+       * @returns {string}
+       * @constructor
+       */
+      GET_IMGPATH: function (path) {
+        return this.$getImgPath(path);
+      },
       /**
        * 初始化顶部shop的信息
        * 注意：在访问路由相关参数的时候用$route而不是$router
@@ -330,9 +373,9 @@
           });
       },
       /**
-       * 初始化评价列表
+       * 刷新评价列表
        */
-      INIT_RATING_LIST() {
+      REFRESH_RATING_LIST() {
         const id = this.$route.params.shopid;
         const that = this;
         req.get(`ugc/v2/restaurants/${id}/ratings`, {offset: that.ratingTags.length, limit: 10})
@@ -341,6 +384,41 @@
             const res = response.data;
             that.ratingList.push(...res);
           });
+      },
+      /**
+       * 滑动的回调函数
+       */
+      ON_SCROLL() {
+        const element = this.$refs.evaluate_scroll;
+        let sHeight = element.scrollHeight;
+        let sTop = element.scrollTop;
+        let cHeight = element.clientHeight;
+
+        // 判断是不是开始状态
+        if (this.ratingList.length) {
+          if (
+            // 判断是否到底
+          sHeight - sTop <= (cHeight + 2) && sHeight - sTop >= (cHeight - 2)
+          ) {
+            this.REFRESH_RATING_LIST();
+          }
+        } else {
+          this.REFRESH_RATING_LIST();
+        }
+
+        // const that = this;
+        // let element = this.$refs.evaluate_scroll;
+        // if (
+        //   this.$refs.evaluate_scroll.scrollHeight - this.$refs.evaluate_scroll.scrollTop === this.$refs.evaluate_scroll.clientHeight
+        // ) {
+        //   // req.get(`ugc/v2/restaurants/${id}/ratings`, {offset: that.ratingTags.length, limit: 10})
+        //   //   .then(function (response) {
+        //   //     // 获取成功后
+        //   //     const res = response.data;
+        //   //     that.ratingList.push(...res);
+        //   //   });
+        //   alert("bottom");
+        // }
       },
       /**
        * 切换 "商品" 和 "评价"
@@ -581,6 +659,18 @@
   /**
     content中点击评价部分
      */
+  .evaluate_container {
+    position: absolute;
+    display: flex;
+    height: 300px;
+    height: calc(100% - 9rem);
+  }
+
+  .shop_evaluate {
+    width: 100%;
+    overflow-y: auto;
+  }
+
   .shop_evaluate--overall {
     background-color: #ffffff;
     padding: 1rem;
@@ -626,6 +716,7 @@
   /**
   评价详情部分
   */
+
   .shop_evaluate--detail {
     background-color: #ffffff;
     margin-top: 0.6rem;
@@ -658,18 +749,63 @@
 
   /*评价列表部分*/
   .shop_evaluate--detail_list {
-    position: absolute;
-    height: 20%;
+    /*position: absolute; */
+    /* height: 20%; */
     width: 100%;
-    margin-left: -0.4rem;
-    margin-right: -0.4rem;
+    /* margin-left: -0.4rem; */
+    /* margin-right: -0.4rem; */
+    display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
   }
 
   .shop_evaluate--detail_list_ul {
     width: 100%;
-    overflow-y: auto;
+    /*overflow-y: auto;*/
   }
+
+  .shop_evaluate--detail_list_ul--right {
+    width: 100%;
+  }
+
+  .evaluate_avatar_img {
+    width: 1.5rem;
+    height: 1.5rem;
+    border: 0.025rem;
+    border-radius: 50%;
+    margin-right: .8rem;
+  }
+
+  .shop_evaluate--detail_list_ul--right h3 {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-content: center;
+    font-size: smaller;
+  }
+
+  .shop_evaluate--detail_list_ul--right ul {
+    display: flex;
+    flex-flow: row;
+  }
+  .shop_evaluate--detail_list_ul--right_span {
+    display: inline-flex;
+    flex-flow: column;
+    font-size: 0.3rem;
+    color: #2F2F2F;
+
+  }
+
+  .shop_evaluate--detail_list_ul--right_span img {
+    width: 4rem;
+    height: 4rem;
+    margin-right: 0.3rem;
+  }
+
+  .shop_evaluate--detail_list_ul--right_span p {
+    max-width: 4rem;
+  }
+
 
   /**
   整个右侧部分
@@ -694,7 +830,7 @@
   }
 
   /*整个右侧的每一行的样式*/
-  .goods-right_list_item_main {
+  .goods-right_list_item_main, .shop_evaluate--detail_item {
     display: flex;
     flex: 1;
     padding: 0.3rem;
@@ -702,14 +838,14 @@
   }
 
   /*每一行的左部分*/
-  .goods-right_list_item_main--left {
+  .goods-right_list_item_main--left, .shop_evaluate--detail_item--left {
     padding-right: 0.4rem;
     display: flex;
     align-items: center;
   }
 
   /*每一行的右部分*/
-  .goods-right_list_item_main--right {
+  .goods-right_list_item_main--right, .shop_evaluate--detail_item--right{
     flex: 1;
     font-size: 0.5rem;
     display: flex;
