@@ -1,6 +1,9 @@
 <template>
   <header class="shop_header">
     <div class="shop_header_box">
+      <router-link to="/entry" class="shop_header_icon--link">
+        <i class="el-icon-arrow-left shop_header_icon--left"></i>
+      </router-link>
       <img :src="resBaseImgurl + shopDetail.image_path" class="shop_header_img"/>
       <div class="shop_header_div">
         <!--右侧部分上部-->
@@ -15,8 +18,14 @@
         <div class="shop_header_div--bottom">
           <p> {{ shopDetail.promotion_info }} </p>
         </div>
+
+
       </div>
+      <router-link to="/entry">
+        <i class="el-icon-arrow-right shop_header_icon--right"></i>
+      </router-link>
     </div>
+
     <div class="shop_header_activity">
         <span v-for="activity in activities">
           {{ activity.description }}
@@ -26,30 +35,29 @@
 </template>
 
 <script>
-import req from '@/request'
+  import req from '@/request'
 
-export default {
-  name: "shop-header",
-  props: ['shopDetail','tips'],
-  data() {
-    return {
-      resBaseImgurl: '//elm.cangdu.org/img/',//图片url前缀
-      // activities: [],// shop activities
-      // tips: "",// shop配送费tips
-    }
-  },
-  computed: {
-    activities() {
-      return this.shopDetail.activities;
-    }
-  },
-  mounted() {
-    console.log(this.shopDetail);
-  },
-  methods: {
+  export default {
+    name: "shop-header",
+    props: ['shopDetail', 'tips'],
+    data() {
+      return {
+        resBaseImgurl: '//elm.cangdu.org/img/',//图片url前缀
+        // activities: [],// shop activities
+        // tips: "",// shop配送费tips
+      }
+    },
+    computed: {
+      activities() {
+        return this.shopDetail.activities;
+      }
+    },
+    mounted() {
+      console.log(this.shopDetail);
+    },
+    methods: {}
+
   }
-
-}
 </script>
 
 <style>
@@ -82,6 +90,28 @@ export default {
     width: 100%;
   }
 
+  .shop_header_icon--link {
+    display: inline-flex;
+    flex-flow: column;
+  }
+
+  .shop_header_icon--left {
+    color: #fff;
+    font-size: 1.2rem;
+  }
+
+  .shop_header_icon--right {
+    /*transform:rotate(180deg);*/
+    /*-ms-transform:rotate(180deg); 	!* IE 9 *!*/
+    /*-moz-transform:rotate(180deg); 	!* Firefox *!*/
+    /*-webkit-transform:rotate(180deg); !* Safari 和 Chrome *!*/
+    /*-o-transform:rotate(180deg); 	!* Opera *!*/
+    line-height: 4rem;
+    color: #ffffff;
+    font-size: 1.8rem;
+  }
+
+  /*右侧*/
   .shop_header_div--top h3 {
     font-size: 1.1rem;
     /*文本不换行，超出部分用省略号表示*/
