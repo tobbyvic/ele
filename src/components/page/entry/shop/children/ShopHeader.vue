@@ -4,11 +4,11 @@
       <router-link to="/entry" class="shop_header_icon--link">
         <i class="el-icon-arrow-left shop_header_icon--left"></i>
       </router-link>
-      <img :src="resBaseImgurl + shopDetail.image_path" class="shop_header_img"/>
+      <img :src="resBaseImgurl + shopOverall.image_path" class="shop_header_img"/>
       <div class="shop_header_div">
         <!--右侧部分上部-->
         <div class="shop_header_div--top">
-          <h3>{{ shopDetail.name }}</h3>
+          <h3>{{ shopOverall.name }}</h3>
         </div>
         <!--右侧部分中部-->
         <div class="shop_header_div--middle">
@@ -16,14 +16,14 @@
         </div>
         <!--右侧部分下部-->
         <div class="shop_header_div--bottom">
-          <p> {{ shopDetail.promotion_info }} </p>
+          <p> {{ shopOverall.promotion_info }} </p>
         </div>
 
 
       </div>
-      <router-link to="/entry">
+      <a @click="SHOW_SHOP_DETAIL">
         <i class="el-icon-arrow-right shop_header_icon--right"></i>
-      </router-link>
+      </a>
     </div>
 
     <div class="shop_header_activity">
@@ -31,31 +31,45 @@
           {{ activity.description }}
         </span>
     </div>
+
+
+
   </header>
+
+
+
 </template>
 
 <script>
   import req from '@/request'
+  import ShopDetail from './ShopDetail'
 
   export default {
     name: "shop-header",
-    props: ['shopDetail', 'tips'],
+    props: ['shopOverall', 'tips'],
+    components: {
+      ShopDetail
+    },
     data() {
       return {
         resBaseImgurl: '//elm.cangdu.org/img/',//图片url前缀
         // activities: [],// shop activities
         // tips: "",// shop配送费tips
+        detailFlag: false
       }
     },
     computed: {
       activities() {
-        return this.shopDetail.activities;
+        return this.shopOverall.activities;
       }
     },
     mounted() {
-      console.log(this.shopDetail);
     },
-    methods: {}
+    methods: {
+      SHOW_SHOP_DETAIL() {
+        this.$store.commit("MAKETRUE_SHOP_DETAIL", true);
+      }
+    }
 
   }
 </script>

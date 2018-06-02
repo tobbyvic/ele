@@ -9,7 +9,9 @@ const state = {
   //address的历史记录
   historyObject: {
     addressHistory: []
-  }
+  },
+  //shop.vue中shopDetail的显示和隐藏标志位
+  shopDetailFlag: false
 };
 
 const getters = {}
@@ -24,6 +26,10 @@ const mutations = {
     } else {
       window.localStorage.setItem("geohash", state.geohash);
     }
+  },
+  // 使shopDetailFlag显示
+  MAKETRUE_SHOP_DETAIL(state, payload) {
+    state.shopDetailFlag = payload
   },
   // 提交address的搜索历史
   // EMIT_ADDRESSHISTORY(state, payload) {

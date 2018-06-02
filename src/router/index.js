@@ -10,12 +10,12 @@ import find from '@/components/page//find/find'
 import order from '@/components/page/order/order'
 
 
-
 /**
  * 引入entry进入后的一些组件
  */
 import food from '@/components/page/entry/food/food'
 import shop from '@/components/page/entry/shop/shop'
+import ShopHeader from '@/components/page/entry/shop/children/ShopHeader'
 
 Vue.use(Router)
 
@@ -75,7 +75,15 @@ export default new Router({
     {
       name: 'shop',
       path: '/shop/:shopid',
-      component: shop
+      component: shop,
+    },
+    /**
+     * shopDetail
+     */
+    {
+      path: '/shop/detail',
+      component: ShopHeader
+
     }
   ]
 });

@@ -3,7 +3,7 @@
     <!--引入svg-->
     <svg-example></svg-example>
     <!--header-->
-    <shop-header :shopDetail="shopDetail" :tips="tips"></shop-header>
+    <shop-header :shopOverall="shopOverall" :tips="tips"></shop-header>
     <!--top-->
     <div class="shop_top">
       <span>
@@ -13,6 +13,12 @@
         <div :class="{shop_top_active: activeFlag === 0}" @click="SWITCH_CONTENT(0)">评价</div>
       </span>
     </div>
+
+
+    <!--ShopDetail页面-->
+    <shop-detail :shopOverall = "shopOverall"></shop-detail>
+
+
 
     <!--content-->
     <!--商品页面-->
@@ -92,7 +98,7 @@
         <!--综合评价-->
         <div class="shop_evaluate--overall">
           <div class="shop_evaluate--overall--left">
-            <span class="shop_evaluate--overall--left_number">{{ shopDetail.rating }}</span>
+            <span class="shop_evaluate--overall--left_number">{{ shopOverall.rating }}</span>
             <span class="shop_evaluate--overall--left_text">综合评价</span>
             <span class="shop_evaluate--overall--left_percent">高于周边商家
               <span>{{(ratingScoresData.compare_rating*100).toFixed(1)}}%</span>
@@ -101,7 +107,7 @@
           <div class="shop_evaluate--overall--right">
             <span>服务态度{{ratingScoresData.service_score.toFixed(1)}}</span>
             <span>菜品评价{{ratingScoresData.food_score.toFixed(1)}}</span>
-            <span>送达时间{{ shopDetail.order_lead_time }}&nbsp;分钟</span>
+            <span>送达时间{{ shopOverall.order_lead_time }}&nbsp;分钟</span>
           </div>
         </div>
 
@@ -213,6 +219,8 @@
     <transition name="fade">
       <div class="screen_cover" v-show="showCart&&cartRes.length" @click="switchCart()"></div>
     </transition>
+
+
   </div>
 </template>
 
@@ -221,6 +229,8 @@
   import ListTemplate from '@/components/page/entry/children/ListTemplate'
 
   import ShopHeader from './children/ShopHeader'
+  import ShopDetail from './children/ShopDetail'
+
   // req
   import req from '@/request'
 
@@ -229,14 +239,14 @@
     components: {
       SvgExample,
       ListTemplate,
-      ShopHeader
+      ShopHeader,
+      ShopDetail
     },
     data() {
       return {
         // header部分
-        shopDetail: {},// shop详情
+        shopOverall: {},// shop详情
         tips: "",// shop配送费tips
-
 
         // top部分
         activeFlag: 1,//content页面的切换标志位
@@ -321,7 +331,7 @@
             if (response.data) {
               //如果返回值
               that.tips = response.data.piecewise_agent_fee.tips;
-              that.shopDetail = response.data;
+              that.shopOverall = response.data;
             }
           });
       },
