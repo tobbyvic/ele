@@ -11,7 +11,9 @@ const state = {
     addressHistory: []
   },
   //shop.vue中shopDetail的显示和隐藏标志位
-  shopDetailFlag: false
+  shopDetailFlag: false,
+  //profile.vue中profileDetail的显示和隐藏标志位
+  profileDetailFlag: false
 };
 
 const getters = {}
@@ -31,6 +33,12 @@ const mutations = {
   MAKETRUE_SHOP_DETAIL(state, payload) {
     state.shopDetailFlag = payload
   },
+  // 使profileDetailFlag显示
+  MAKETRUE_PROFILE_DETAIL(state, payload) {
+    state.profileDetailFlag = payload
+  },
+
+
   // 提交address的搜索历史
   // EMIT_ADDRESSHISTORY(state, payload) {
   //   // 提交搜索历史时，先将addressHistory置为session的值

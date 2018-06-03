@@ -9,7 +9,7 @@ import entry from '@/components/page/entry/entry'
 import find from '@/components/page//find/find'
 import order from '@/components/page/order/order'
 import login from '@/components/page/login/login'
-import mine from '@/components/page/mine/mine'
+import profile from '@/components/page/profile/profile'
 
 
 /**
@@ -71,11 +71,11 @@ export default new Router({
       component: login
     },
     /**
-     * 我的mine(用户详情)
+     * 我的profile(用户详情)
      */
     {
-      path: '/mine',
-      component: mine
+      path: '/profile',
+      component: profile
     },
     //*****************************
     /**
