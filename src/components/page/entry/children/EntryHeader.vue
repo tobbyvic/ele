@@ -62,6 +62,7 @@
     -webkit-transform: translateX(-50%) translateY(-50%);
     -moz-transform: translateX(-50%) translateY(-50%);
     -ms-transform: translateX(-50%);
+    text-align: center;
 
     /*文本不换行，超出部分用省略号表示*/
     overflow: hidden;

@@ -171,7 +171,7 @@
         </svg>
         订单
       </li>
-      <li @click="">
+      <li @click="$router.push('/mine')">
         <svg class="bottom-nav--icon">
           <use xmlns:xlink="http://www.w3.org/1999/xlink" :xlink:href="$route.path.indexOf('profile') !== -1? '#profileActive' : '#profile'"></use>
         </svg>
