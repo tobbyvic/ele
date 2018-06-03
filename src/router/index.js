@@ -8,6 +8,7 @@ import city from '@/components/page/city/city'
 import entry from '@/components/page/entry/entry'
 import find from '@/components/page//find/find'
 import order from '@/components/page/order/order'
+import login from '@/components/page/login/login'
 
 
 /**
@@ -61,6 +62,13 @@ export default new Router({
       path: '/order',
       component: order
     },
+    /**
+     * 登录login
+     */
+    {
+      path: '/login',
+      component: login
+    },
     //*****************************
     /**
      * food 分类
@@ -84,6 +92,6 @@ export default new Router({
       path: '/shop/detail',
       component: ShopHeader
 
-    }
+    },
   ]
 });

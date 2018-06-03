@@ -9,7 +9,14 @@
         {{ locationAddress.name }}
       </template>
       <template slot="corner">
-        登录|注册
+        <svg width="1.3rem" height="1.3rem" v-if="userSubmitted" style="color: #ffffff;vertical-align: center">
+          <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#user">
+          </use>
+        </svg>
+
+        <router-link to="/login" v-else>
+          登录|注册
+        </router-link>
       </template>
     </entry-header>
     <!--top-->
@@ -63,6 +70,9 @@
     },
     data() {
       return {
+        // 用户是否登录，右上角的切换标志
+        userSubmitted: false,
+
         foodstuff1: [],
         foodstuff2: [],
         baseImgurl: 'https://fuss10.elemecdn.com',
@@ -108,6 +118,12 @@
               that.locationRestaurant = response.data;
             });
         });
+      /**
+       * 判断用户是否登录
+       */
+      if(window.localStorage.getItem("user")) {
+        this.userSubmitted = true;
+      }
     },
     methods: {
       /**

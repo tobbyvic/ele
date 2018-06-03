@@ -51,18 +51,6 @@ const mutations = {
   //   }
   //
   // },
-  //0.全部 1.经验分享 2.入门学习 3.成果分享
-  EMIT_TYPE(state, obj) {
-    state.homePara.type = obj.type;
-  },
-  EMIT_PAGE(state, obj) {
-    state.homePara.page = obj.page;
-  },
-  // *********************QueryDetail.vue***********************
-  EMIT_TOPICID(state, obj) {
-    state.QueryPara.topic_id = obj.topic_id;
-    console.log(state.QueryPara);
-  }
 
 };
 

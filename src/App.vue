@@ -1,12 +1,18 @@
 <template>
   <div id="app">
+    <!--引入svg-->
+    <svg-example></svg-example>
     <router-view/>
   </div>
 </template>
 
 <script>
+  import SvgExample from '@/components/page/SvgExample'
   export default {
-    name: 'App'
+    name: 'App',
+    components: {
+      SvgExample
+    }
   }
 </script>
 
