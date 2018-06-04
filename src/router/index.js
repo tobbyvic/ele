@@ -9,7 +9,12 @@ import entry from '@/components/page/entry/entry'
 import find from '@/components/page//find/find'
 import order from '@/components/page/order/order'
 import login from '@/components/page/login/login'
+
 import profile from '@/components/page/profile/profile'
+import info from '@/components/page/profile/children/info'
+import address from '@/components/page/profile/children/children/address'
+import add from '@/components/page/profile/children/children/children/add'
+
 
 
 /**
@@ -75,7 +80,25 @@ export default new Router({
      */
     {
       path: '/profile',
-      component: profile
+      component: profile,
+      children: [
+        {
+          path: 'info',
+          component: info,
+          children: [
+            {
+              path: 'address',
+              component: address,
+              children: [
+                {
+                  path: 'add',
+                  component: add
+                }
+              ]
+            }
+          ]
+        }
+      ]
     },
     //*****************************
     /**

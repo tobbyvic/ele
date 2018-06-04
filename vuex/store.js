@@ -13,7 +13,10 @@ const state = {
   //shop.vue中shopDetail的显示和隐藏标志位
   shopDetailFlag: false,
   //profile.vue中profileDetail的显示和隐藏标志位
-  profileDetailFlag: false
+  profileDetailFlag: false,
+
+  //用户信息user
+  user: {}
 };
 
 const getters = {}
@@ -31,12 +34,16 @@ const mutations = {
   },
   // 使shopDetailFlag显示
   MAKETRUE_SHOP_DETAIL(state, payload) {
-    state.shopDetailFlag = payload
+    state.shopDetailFlag = payload;
   },
   // 使profileDetailFlag显示
-  MAKETRUE_PROFILE_DETAIL(state, payload) {
-    state.profileDetailFlag = payload
-  },
+  // MAKETRUE_PROFILE_DETAIL(state, payload) {
+  //   state.profileDetailFlag = payload;
+  // },
+  // 提交用户账户信息
+  EMIT_USER(state, payload) {
+    state.user = payload;
+  }
 
 
   // 提交address的搜索历史

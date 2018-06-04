@@ -19,7 +19,7 @@
         <span>手机:{{user.mobile}}</span>
       </div>
 
-      <div class="profile_intro--extend" @click="SHOW_PROFILE_DETAIL()">
+      <div class="profile_intro--extend" @click="SHOW_INFO()">
         <svg width="2rem" height="2rem">
           <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#arrow_right">
           </use>
@@ -33,8 +33,13 @@
     <bottom-nav class="entry_bottom"></bottom-nav>
 
 
-    <!--ProfileDetail页面-->
-    <profile-detail></profile-detail>
+    <!--&lt;!&ndash;ProfileDetail页面&ndash;&gt;-->
+    <!--<info :user="user"></info>-->
+
+    <transition name="profile-info">
+      <router-view :user="user"></router-view>
+    </transition>
+
 
   </div>
 </template>
@@ -42,7 +47,7 @@
 <script>
   import EntryHeader from '../entry/children/EntryHeader'
   import BottomNav from '../entry/children/BottomNav'
-  import ProfileDetail from './children/ProfileDetail'
+  import info from './children/info'
 
 
 
@@ -53,7 +58,7 @@
     components: {
       EntryHeader,
       BottomNav,
-      ProfileDetail
+      info
     },
     data() {
       return {
@@ -72,8 +77,8 @@
        * 显示用户详情页
        * @constructor
        */
-      SHOW_PROFILE_DETAIL() {
-        this.$store.commit("MAKETRUE_PROFILE_DETAIL", true);
+      SHOW_INFO() {
+        this.$router.push( `${this.$route.path}/info` );
       }
     }
   }
@@ -113,5 +118,17 @@
     vertical-align: middle;
   }
 
+
+
+  /*transition过渡效果*/
+  .profile-info-enter-active, .profile-info-leave-active {
+    transition: all .3s;
+    transform: translateX(0);
+  }
+
+  .profile-info-enter, .profile-info-leave-active {
+    opacity: 0;
+    transform: translateX(100%);
+  }
 
 </style>

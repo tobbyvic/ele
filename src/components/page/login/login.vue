@@ -113,6 +113,7 @@
             const res = JSON.stringify(response.data);
             window.localStorage.setItem("user", res);
             this.$router.push("/entry");
+            this.$store.commit("EMIT_USER",res);
           });
       }
 
