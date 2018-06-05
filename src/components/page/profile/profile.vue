@@ -16,7 +16,7 @@
 
       <div class="profile_intro_username">
         <span>{{user.username}}</span>
-        <span>手机:{{user.mobile}}</span>
+        <span>手机:{{ user.mobile || "未绑定" }}</span>
       </div>
 
       <div class="profile_intro--extend" @click="SHOW_INFO()">
@@ -31,21 +31,21 @@
     <section class="profile_saving">
       <div class="profile_saving_balance">
         <span>
-        <span>{{}}</span>元
+        <span class="profile_saving_icon">{{ user.balance }}</span>元
         </span>
         <p>我的余额</p>
       </div>
 
       <div class="profile_saving_discounts">
         <span>
-        <span>{{}}</span>个
+        <span class="profile_saving_icon" style="color: #ff5f3e">{{ user.gift_amount }}</span>个
         </span>
         <p>我的优惠</p>
       </div>
 
       <div class="profile_saving_integral">
         <span>
-        <span>{{}}</span>分
+        <span class="profile_saving_icon">{{ user.point }}</span>分
         </span>
         <p>我的积分</p>
       </div>
@@ -54,7 +54,7 @@
     <!--list-->
     <ul class="profile_server">
 
-      <li>
+      <li @click="TO_ORDER">
         <div class="profile_server_list">
           <svg width="1.3rem" height="1.3rem" v-if="true">
             <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#profile_order">
@@ -166,6 +166,13 @@
        */
       SHOW_INFO() {
         this.$router.push( `${this.$route.path}/info` );
+      },
+      /**
+       * 到订单页
+       * @constructor
+       */
+      TO_ORDER() {
+        this.$router.push("/order");
       }
     }
   }
@@ -195,7 +202,11 @@
     display: inline-flex;
     flex-flow: column;
     justify-content: center;
+    color: #fff;
+    font-size: 1.1rem;
   }
+
+
 
   .profile_intro--extend {
     color: #fff;
@@ -235,6 +246,12 @@
     text-align: center;
   }
 
+  .profile_saving_icon {
+    color: #f90;
+    font-size: 1.7rem;
+    font-weight: 600;
+  }
+
   /*下面server部分*/
   .profile_server {
     margin-top: 0.4rem;
@@ -257,14 +274,6 @@
   .profile_server_list span {
     margin-left: 0.3rem;
   }
-
-
-
-
-
-
-
-
 
   /*transition过渡效果*/
   .profile-info-enter-active, .profile-info-leave-active {
