@@ -39,7 +39,7 @@
             <a><i class="el-icon-arrow-right"></i></a>
           </li>
 
-          <li class="profile_info_password">
+          <li class="profile_info_password" @click="CHANGE_PASSWORD">
             <p>登录密码</p>
             <div style="color: #8E8E8E;">
               修改
@@ -109,6 +109,13 @@
        */
       SHOW_ADDRESS() {
         this.$router.push( `${this.$route.path}/address` );
+      },
+      /**
+       * 到更改密码页
+       * @constructor
+       */
+      CHANGE_PASSWORD() {
+        this.$router.push( `${this.$route.path}/forget` );
       }
     }
   }

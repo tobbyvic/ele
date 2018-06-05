@@ -13,6 +13,7 @@ import login from '@/components/page/login/login'
 import profile from '@/components/page/profile/profile'
 import info from '@/components/page/profile/children/info'
 import address from '@/components/page/profile/children/children/address'
+import forget from '@/components/page/profile/children/children/forget'
 import add from '@/components/page/profile/children/children/children/add'
 
 
@@ -95,6 +96,10 @@ export default new Router({
                   component: add
                 }
               ]
+            },
+            {
+              path: 'forget',
+              component: forget
             }
           ]
         }
