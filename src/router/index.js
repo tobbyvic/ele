@@ -11,6 +11,7 @@ import order from '@/components/page/order/order'
 import login from '@/components/page/login/login'
 
 import benefit from '@/components/page/benefit/benefit'
+import oldbenefit from '@/components/page/benefit/children/oldbenefit'
 import profile from '@/components/page/profile/profile'
 import info from '@/components/page/profile/children/info'
 import address from '@/components/page/profile/children/children/address'
@@ -111,7 +112,13 @@ export default new Router({
      */
     {
       path: '/benefit',
-      component: benefit
+      component: benefit,
+      children: [
+        {
+          path: 'oldbenefit',
+          component: oldbenefit
+        }
+      ]
     },
     //*****************************
     /**

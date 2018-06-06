@@ -54,13 +54,15 @@
       </ul>
 
 
-      <div class="benefit_content_history">
+      <div class="benefit_content_history" @click="GO_OLDBENEFIT">
         <p>查看历史红包&nbsp;>>></p>
       </div>
     </section>
 
 
-
+    <transition name="benefit-oldbenefit">
+      <router-view :user="user"></router-view>
+    </transition>
 
   </div>
 
@@ -104,6 +106,13 @@
         const res = await req.get(`promotion/v2/users/${this.user.user_id}/hongbaos`,{limit: 20, offset: 0})
         this.benefitArray = res.data;
         console.log(this.benefitArray);
+      },
+      /**
+       * 去过期红包页面
+       * @constructor
+       */
+      GO_OLDBENEFIT() {
+        this.$router.push( `${this.$route.path}/oldbenefit` );
       }
     }
   }
@@ -191,6 +200,17 @@
     text-align: center;
   }
 
+
+  /*transition过渡效果*/
+  .benefit-oldbenefit-enter-active, .benefit-oldbenefit-leave-active {
+    transition: all .3s;
+    transform: translateX(0);
+  }
+
+  .benefit-oldbenefit-enter, .benefit-oldbenefit-leave-active {
+    opacity: 0;
+    transform: translateX(100%);
+  }
 
 
 
