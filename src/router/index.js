@@ -10,6 +10,7 @@ import find from '@/components/page//find/find'
 import order from '@/components/page/order/order'
 import login from '@/components/page/login/login'
 
+import benefit from '@/components/page/benefit/benefit'
 import profile from '@/components/page/profile/profile'
 import info from '@/components/page/profile/children/info'
 import address from '@/components/page/profile/children/children/address'
@@ -104,6 +105,13 @@ export default new Router({
           ]
         }
       ]
+    },
+    /**
+     * 红包benefit
+     */
+    {
+      path: '/benefit',
+      component: benefit
     },
     //*****************************
     /**

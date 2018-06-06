@@ -36,7 +36,7 @@
         <p>我的余额</p>
       </div>
 
-      <div class="profile_saving_discounts">
+      <div class="profile_saving_discounts" @click="TO_BENEFIT">
         <span>
         <span class="profile_saving_icon" style="color: #ff5f3e">{{ user.gift_amount }}</span>个
         </span>
@@ -173,6 +173,13 @@
        */
       TO_ORDER() {
         this.$router.push("/order");
+      },
+      /**
+       * 到红包页面
+       * @constructor
+       */
+      TO_BENEFIT() {
+        this.$router.push("/benefit");
       }
     }
   }
