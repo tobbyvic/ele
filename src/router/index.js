@@ -8,6 +8,7 @@ import city from '@/components/page/city/city'
 import entry from '@/components/page/entry/entry'
 import find from '@/components/page//find/find'
 import order from '@/components/page/order/order'
+import orderDetail from '@/components/page/order/children/orderDetail'
 import login from '@/components/page/login/login'
 
 import benefit from '@/components/page/benefit/benefit'
@@ -17,7 +18,6 @@ import info from '@/components/page/profile/children/info'
 import address from '@/components/page/profile/children/children/address'
 import forget from '@/components/page/profile/children/children/forget'
 import add from '@/components/page/profile/children/children/children/add'
-
 
 
 /**
@@ -69,7 +69,13 @@ export default new Router({
      */
     {
       path: '/order',
-      component: order
+      component: order,
+      children: [
+        {
+          path: 'orderDetail',
+          component: orderDetail
+        }
+      ]
     },
     /**
      * 登录login

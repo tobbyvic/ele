@@ -17,16 +17,16 @@
         </div>
 
         <div class="order_list_text">
-          <div class="order_list_text--top">
+          <div class="order_list_text--top" @click="SHOW_ORDER(item)">
             <span>
-              {{ item.restaurant_name }}
+              {{ item.restaurant_name }}>
             </span>
             <span>
               {{ item.status_bar.title }}
             </span>
           </div>
           <div class="order_list_text--time">
-              {{ item.formatted_created_at }}
+            {{ item.formatted_created_at }}
           </div>
           <div class="order_list_text--middle">
             <span>
@@ -46,6 +46,9 @@
       </li>
     </ul>
 
+    <transition name="order-detail">
+      <router-view :itemDetail = "itemDetail"></router-view>
+    </transition>
 
     <!--bottom nav-->
     <bottom-nav class="entry_bottom"></bottom-nav>
@@ -69,12 +72,12 @@
         orders: [],
         user: {},
         imgBaseUrl,
-        nowTime: 0
+        nowTime: 0,
+        // 点击了哪个订单详情
+        itemDetail:{}
       }
     },
-    computed: {
-
-    },
+    computed: {},
     created() {
       this.INIT_ORDERS();
     },
@@ -104,8 +107,16 @@
         this.$nextTick(function () {
           setInterval(() => {
             that.nowTime = Date.now()
-          },1000);
+          }, 1000);
         })
+      },
+      /**
+       * 显示订单详情页
+       * @constructor
+       */
+      SHOW_ORDER(item) {
+        this.itemDetail = item;
+        this.$router.push(`${this.$route.path}/orderDetail`);
       }
     }
   }
@@ -138,6 +149,7 @@
     flex: 1;
     padding: 0.3rem 0.6rem;
   }
+
   /*右边四行文字的样式*/
   .order_list_text--top {
     font-size: 0.8rem;
@@ -154,7 +166,7 @@
 
   .order_list_text--middle {
     font-size: 0.8rem;
-    color:#666;
+    color: #666;
     display: flex;
     justify-content: space-between;
     padding: 0.4rem 0;
@@ -167,13 +179,23 @@
     flex-flow: row-reverse;
   }
 
-
-  .order_list_text--bottom span{
+  .order_list_text--bottom span {
     font-size: .55rem;
     color: #3190e8;
     border: .04rem solid #3190e8;
     padding: .1rem .2rem;
     border-radius: .15rem;
+  }
+
+  /*transition过渡效果*/
+  .order-detail-enter-active, .order-detail-leave-active {
+    transition: all .3s;
+    transform: translateX(0);
+  }
+
+  .order-detail-enter, .order-detail-leave-active {
+    opacity: 0;
+    transform: translateX(100%);
   }
 
 

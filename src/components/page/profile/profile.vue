@@ -12,10 +12,10 @@
 
     <!--top-->
     <section class="profile_intro">
-      <img :src="imgBaseUrl + user.avatar"/>
+      <img :src="imgBaseUrl + user.avatar "/>
 
       <div class="profile_intro_username">
-        <span>{{user.username}}</span>
+        <span>{{ user.username  }}</span>
         <span>手机:{{ user.mobile || "未绑定" }}</span>
       </div>
 
@@ -31,21 +31,21 @@
     <section class="profile_saving">
       <div class="profile_saving_balance">
         <span>
-        <span class="profile_saving_icon">{{ user.balance }}</span>元
+        <span class="profile_saving_icon">{{ user.balance || "0" }}</span>元
         </span>
         <p>我的余额</p>
       </div>
 
       <div class="profile_saving_discounts" @click="TO_BENEFIT">
         <span>
-        <span class="profile_saving_icon" style="color: #ff5f3e">{{ user.gift_amount }}</span>个
+        <span class="profile_saving_icon" style="color: #ff5f3e">{{ user.gift_amount || "0" }}</span>个
         </span>
         <p>我的优惠</p>
       </div>
 
       <div class="profile_saving_integral">
         <span>
-        <span class="profile_saving_icon">{{ user.point }}</span>分
+        <span class="profile_saving_icon">{{ user.point || "0" }}</span>分
         </span>
         <p>我的积分</p>
       </div>
@@ -150,13 +150,22 @@
     data() {
       return {
         imgBaseUrl,
-        user: {}
+        user: {
+          username: "登录|注册",
+          avatar: "default.jpg"
+        },
+        loginFlag: false
       }
     },
     created() {
 
-      const str = window.localStorage.getItem("user");
-      this.user = JSON.parse(str);
+      if (window.localStorage.getItem("user")) {
+        const str = window.localStorage.getItem("user");
+        this.user = JSON.parse(str);
+        this.loginFlag = true;
+      } else {
+        console.log("没有登录user");
+      }
 
     },
     methods: {
@@ -165,7 +174,11 @@
        * @constructor
        */
       SHOW_INFO() {
-        this.$router.push( `${this.$route.path}/info` );
+        if (this.loginFlag) {
+          this.$router.push( `${this.$route.path}/info` );
+        } else {
+          this.$router.push( `/login` );
+        }
       },
       /**
        * 到订单页
