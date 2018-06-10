@@ -3,16 +3,19 @@
     <!--header-->
     <entry-header :locationAddress="locationAddress">
       <template slot="icon">
-        <i class="el-icon-search"></i>
+        <router-link to="/find"><i class="el-icon-search"></i></router-link>
       </template>
       <template slot="content">
         {{ locationAddress.name }}
       </template>
       <template slot="corner">
-        <svg width="1.3rem" height="1.3rem" v-if="userSubmitted" style="color: #ffffff;vertical-align: center">
-          <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#user">
-          </use>
-        </svg>
+        <router-link to="/profile" v-if="userSubmitted">
+          <svg width="1.3rem" height="1.3rem"  style="color: #ffffff;vertical-align: center">
+            <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#user">
+            </use>
+          </svg>
+        </router-link>
+
 
         <router-link to="/login" v-else>
           登录|注册
@@ -121,7 +124,7 @@
       /**
        * 判断用户是否登录
        */
-      if(window.localStorage.getItem("user")) {
+      if (window.localStorage.getItem("user")) {
         this.userSubmitted = true;
       }
     },
@@ -132,7 +135,7 @@
        * @constructor
        */
       JUMPTO_FOOD(food) {
-        this.$router.push({ path: '/food', query: { restaurant_category_id : food.id, title: food.title }});
+        this.$router.push({path: '/food', query: {restaurant_category_id: food.id, title: food.title}});
       }
     }
   }

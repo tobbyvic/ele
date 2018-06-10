@@ -3,7 +3,7 @@
     <!--EntryHeader-->
     <entry-header>
       <template slot="icon">
-        <a @click="BACKTO_ORDER"><i class="el-icon-arrow-left"></i></a>
+        <router-link to="/order"><i class="el-icon-arrow-left"></i></router-link>
       </template>
       <template slot="content">
         订单详情
@@ -21,14 +21,58 @@
         <a v-else>再来一单</a>
         </span>
       </div>
+    </section>
+
+    <section class="order-detail_infro">
+      <div class="order-detail_infro_title">
+        <img :src="imgBaseUrl + itemDetail.restaurant_image_url" class="order-detail_infro_title_img"/>
+        <span>{{ itemDetail.restaurant_name }}</span>
+        <span><i class="el-icon-arrow-right"></i></span>
+      </div>
+
+      <ul class="order-detail_infro_list">
+        <!--买到的商品及价钱列表-->
+        <li v-for="item in itemDetail.basket.group[0]" class="order-detail_infro_item">
+          <span>
+            {{ item.name }}
+          </span>
+          <span class="order-detail_infro_item--right">
+            <span style="color: #8E8E8E; font-size: 1rem;padding-right: 0.5rem;">x{{ item.quantity }}</span>
+            <span>{{ item.price }}</span>
+          </span>
+        </li>
+      </ul>
+      <div class="order-detail_infro_deliver">
+        <span>
+          {{ itemDetail.basket.deliver_fee.name }}
+        </span>
+
+        <span>
+          {{ itemDetail.basket.deliver_fee.price }}
+        </span>
+      </div>
+      <div class="order-detail_infro_price">
+        实付: {{ itemDetail.total_amount }}
+      </div>
+    </section>
+
+    <section class="order-detail_deliver">
+      <h3>配送信息</h3>
+
+      <div class="order-detail_deliver_time">
+        配送时间: &nbsp;尽快送达
+      </div>
+
+      <div class="order-detail_deliver_address">
+        配送地址: &nbsp;默认地址
+      </div>
+
+
 
 
     </section>
 
 
-    <p>
-
-    </p>
   </div>
 </template>
 
@@ -83,6 +127,10 @@
     color: #000;
   }
 
+  /**
+  页面的title
+   */
+
   .order-detail_title {
     margin-top: 3.8rem;
     background: #fff;
@@ -109,4 +157,73 @@
     border-radius: .15rem;
     /*display: inline-flex;*/
   }
+
+  /**
+  页面的infro
+   */
+
+  .order-detail_infro,.order-detail_deliver {
+    margin-top: .45rem;
+    background: #fff;
+  }
+
+  .order-detail_infro_title {
+    display: flex;
+    flex-flow: row;
+    justify-content: space-between;
+    border-bottom: 0.03rem solid #eee;
+    padding: .4rem;
+  }
+
+  .order-detail_infro_title span {
+    line-height: 2rem;
+    justify-self: flex-end;
+  }
+
+  .order-detail_infro_title_img {
+    width: 2rem;
+    height: 2rem;
+  }
+
+  /*页面每一条商品的记录*/
+  .order-detail_infro_list {
+    border-bottom: 0.03rem solid #eee;
+  }
+
+  .order-detail_infro_item,.order-detail_infro_deliver {
+    display: flex;
+    justify-content: space-between;
+    padding: .4rem .2rem;
+  }
+
+  .order-detail_infro_deliver {
+    border-bottom: 0.03rem solid #eee;
+  }
+
+  .order-detail_infro_item--right {
+    display: inline-flex;
+  }
+
+  .order-detail_infro_price {
+    display: flex;
+    justify-content: flex-end;
+    padding: .8rem .2rem;
+    color: #f60;
+    font-weight: 600;
+  }
+
+  /**
+  最下面的配送信息
+   */
+  .order-detail_deliver h3 {
+    padding: .4rem;
+    border-bottom: 0.03rem solid #eee;
+  }
+
+  .order-detail_deliver div {
+    padding: .4rem .2rem;
+    color: #666;
+  }
+
+
 </style>

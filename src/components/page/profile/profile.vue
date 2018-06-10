@@ -3,7 +3,7 @@
     <!--header-->
     <entry-header>
       <template slot="icon">
-        <i class="el-icon-search"></i>
+        <router-link to="/entry"><i class="el-icon-arrow-left"></i></router-link>
       </template>
       <template slot="content">
         我的
