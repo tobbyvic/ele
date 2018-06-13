@@ -89,16 +89,20 @@
         try {
           const guess = await req.get(`v1/cities`, {type: 'guess'});
           this.location = guess.data;
+        } catch (e) {
+          console.log("定位获取不到");
+        }
+        try {
           const hot = await req.get(`v1/cities`, {type: 'hot'});
           this.hotCitys = hot.data;
+        } catch (e) {
+          console.log("热门城市获取不到");
+        }
+        try {
           const group = await req.get(`v1/cities`, {type: 'group'});
           this.groupCitys = group.data;
         } catch (e) {
-          this.$message({
-            showClose: true,
-            message: '无法获得返回数据',
-            type: 'error'
-          });
+          console.log("所有城市获取不到");
         }
       },
       /**
