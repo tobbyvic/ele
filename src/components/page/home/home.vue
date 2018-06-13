@@ -52,8 +52,8 @@
 </template>
 
 <script>
-  //引入axios
-  import axios from 'axios'
+  // req
+  import req from '@/request'
 
   export default {
     name: "home",
@@ -77,20 +77,30 @@
       }
 
     },
-    created() {
-      /**
-       * 初始化时发送ajax请求数据，并发axios
-       */
-      let that = this;
-      axios.all([this.AJAX_GET({type: 'guess'}), this.AJAX_GET({type: 'hot'}), this.AJAX_GET({type: 'group'})])
-        .then(axios.spread(function (location, hot, group) {
-          that.location = location.data;
-          that.hotCitys = hot.data;
-          that.groupCitys = group.data;
-        }));
-
+    mounted() {
+      // 初始化城市
+      this.INIT_CITYS();
     },
     methods: {
+      /**
+       * 异步初始化城市
+       */
+      async INIT_CITYS() {
+        try {
+          const guess = await req.get(`v1/cities`, {type: 'guess'});
+          this.location = guess.data;
+          const hot = await req.get(`v1/cities`, {type: 'hot'});
+          this.hotCitys = hot.data;
+          const group = await req.get(`v1/cities`, {type: 'group'});
+          this.groupCitys = group.data;
+        } catch (e) {
+          this.$message({
+            showClose: true,
+            message: '无法获得返回数据',
+            type: 'error'
+          });
+        }
+      },
       /**
        * 初始化页面时的ajax
        * @param para
