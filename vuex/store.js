@@ -36,15 +36,10 @@ const mutations = {
   MAKETRUE_SHOP_DETAIL(state, payload) {
     state.shopDetailFlag = payload;
   },
-  // 使profileDetailFlag显示
-  // MAKETRUE_PROFILE_DETAIL(state, payload) {
-  //   state.profileDetailFlag = payload;
-  // },
   // 提交用户账户信息
   EMIT_USER(state, payload) {
     state.user = payload;
   }
-
 
   // 提交address的搜索历史
   // EMIT_ADDRESSHISTORY(state, payload) {
