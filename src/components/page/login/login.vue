@@ -3,7 +3,9 @@
     <!--header-->
     <entry-header>
       <template slot="icon">
-        <i class="el-icon-search"></i>
+        <a @click="GO_BACK">
+          <i class="el-icon-arrow-left"></i>
+        </a>
       </template>
       <template slot="content">
         密码登录
@@ -115,7 +117,15 @@
             this.$router.push("/entry");
             this.$store.commit("EMIT_USER",res);
           });
+      },
+      /**
+       * 返回上一个页面
+       * @constructor
+       */
+      GO_BACK() {
+        this.$router.go(-1);
       }
+
 
     }
   }

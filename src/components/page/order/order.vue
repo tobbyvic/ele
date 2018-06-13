@@ -39,7 +39,7 @@
           <div class="order_list_text--bottom">
             <span>
               <computed-time v-if="item.status_bar.title == '等待支付'" :time="item.time_pass"></computed-time>
-              <a v-else>再来一单</a>
+              <a @click="BUY_AGAIN" v-else>再来一单</a>
             </span>
           </div>
         </div>
@@ -79,7 +79,11 @@
     },
     computed: {},
     created() {
-      this.INIT_ORDERS();
+      try {
+        this.INIT_ORDERS();
+      } catch (e) {
+        console.log(e.message);
+      }
     },
     mounted() {
       // this.now();
@@ -97,10 +101,14 @@
        */
       async INIT_ORDERS() {
         let userStr = window.localStorage.getItem("user");
-        this.user = JSON.parse(userStr);
-        const res = await req.get(`bos/v2/users/${this.user.user_id}/orders`, {limit: 20, offset: 0})
-        this.orders = res.data;
-        console.log(this.orders);
+        if (userStr) {
+          this.user = JSON.parse(userStr);
+          const res = await req.get(`bos/v2/users/${this.user.user_id}/orders`, {limit: 20, offset: 0})
+          this.orders = res.data;
+          console.log(this.orders);
+        } else {
+          console.log("userStr 未定义");
+        }
       },
       now: function () {
         const that = this;
@@ -117,6 +125,13 @@
       SHOW_ORDER(item) {
         this.itemDetail = item;
         this.$router.push(`${this.$route.path}/orderDetail`);
+      },
+      /**
+       * 再来一单，跳转到entry页
+       * @constructor
+       */
+      BUY_AGAIN() {
+        this.$router.push("/entry");
       }
     }
   }

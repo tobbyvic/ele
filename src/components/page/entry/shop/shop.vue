@@ -182,7 +182,7 @@
           <p>配送费：￥5</p>
         </div>
       </div>
-      <div class="shop_bottom--right">
+      <div class="shop_bottom--right" @click="CAN_NOT">
         去结算
       </div>
     </div>
@@ -363,7 +363,17 @@
             console.log(response.data);
             that.goods = response.data;
             // 初始化数据
-            that.CHOOSE_GOOD(response.data[0]);
+
+            if (response.data.length) {
+              that.CHOOSE_GOOD(response.data[0]);
+            } else {
+              that.$message({
+                showClose: true,
+                message: '该商店没有商品可卖',
+                type: 'error'
+              });
+              console.log("该商店没有商品可卖");
+            }
           });
       },
       /**
@@ -567,7 +577,19 @@
         } else {
           return false
         }
+      },
+      /**
+       * 因为用的模拟接口，无法提交订单
+       * @constructor
+       */
+      CAN_NOT() {
+        this.$message({
+          showClose: true,
+          message: '因为用的模拟接口，无法提交订单',
+          type: 'error'
+        });
       }
+
     }
   }
 </script>

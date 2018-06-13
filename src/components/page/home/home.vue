@@ -7,7 +7,7 @@
           ele.me
         </div>
         <div class="home_header--inside_div">
-          登录|注册
+          <a @click="JUDGE_SUBMIT">登录|注册</a>
         </div>
       </div>
     </div>
@@ -17,7 +17,7 @@
         <span>当前定位城市：</span>
         <span>定位不准时，请在城市列表中选择</span>
       </div>
-      <div class="home_top_div home_top_div--under" @click="POSITION_CITY">
+      <div class="home_top_div home_top_div--under" @click="POSITION_CITY(location.id)">
         <span id="location_font">{{ location.name }}</span>
         <span><i class="el-icon-arrow-right"></i></span>
       </div>
@@ -29,8 +29,8 @@
       </div>
       <div class="home_middle--hot_list">
         <ul>
-          <li v-for="city in hotCitys" :key="city.id">
-            {{ city.name }}
+          <li v-for="item in hotCitys" :key="item.id" @click="POSITION_CITY(item.id)">
+            {{ item.name }}
           </li>
         </ul>
       </div>
@@ -42,7 +42,7 @@
       </div>
       <div class="home_content--list">
         <ul>
-          <li v-for="city in groupCitys[title]" :key="city.id" class="fontGray">
+          <li v-for="city in groupCitys[title]" :key="city.id" class="fontGray" @click="POSITION_CITY(city.id)">
             {{ city.name }}
           </li>
         </ul>
@@ -109,10 +109,29 @@
        * 点击定位城市后跳转
        * @constructor
        */
-      POSITION_CITY: function () {
-        let id = this.location.id;
+      POSITION_CITY: function (id) {
+        // let id = this.location.id;
         this.$router.push({ path: `/cities/${id}` });
+      },
+      /**
+       *
+       * @constructor
+       */
+      JUDGE_SUBMIT() {
+        // 判断是否事先选好了地点
+        if(window.localStorage.getItem("geohash")){
+          this.$router.push("/login");
+          return true
+        } else {
+          this.$message({
+            showClose: true,
+            message: '请先选择城市和地点',
+            type: 'warning'
+          });
+          return false
+        }
       }
+
     }
   }
 </script>

@@ -102,10 +102,14 @@
        */
       async INIT_BENEFIT() {
         let userStr = window.localStorage.getItem("user");
-        this.user = JSON.parse(userStr);
-        const res = await req.get(`promotion/v2/users/${this.user.user_id}/hongbaos`,{limit: 20, offset: 0})
-        this.benefitArray = res.data;
-        console.log(this.benefitArray);
+        if (userStr) {
+          this.user = JSON.parse(userStr);
+          const res = await req.get(`promotion/v2/users/${this.user.user_id}/hongbaos`, {limit: 20, offset: 0})
+          this.benefitArray = res.data;
+          console.log(this.benefitArray);
+        } else {
+          console.log("用户未登录,没有红包")
+        }
       },
       /**
        * 去过期红包页面

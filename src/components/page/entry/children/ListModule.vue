@@ -138,7 +138,7 @@
   .list-module_div--top span {
     font-size: 0.5rem;
     color: #999;
-    border: 0.025rem solid #f1f1f1;
+    /*border: 0.025rem solid #f1f1f1;*/
     border-radius: 0.2rem;
     margin-left: 0.1rem;
   }

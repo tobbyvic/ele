@@ -192,7 +192,15 @@
        * @constructor
        */
       TO_BENEFIT() {
-        this.$router.push("/benefit");
+        if (this.loginFlag) {
+          this.$router.push("/benefit");
+        } else {
+          this.$message({
+            showClose: true,
+            message: '用户未登录',
+            type: 'error'
+          });
+        }
       }
     }
   }
@@ -206,7 +214,7 @@
   /*顶部介绍部分*/
   .profile_intro {
     margin-top: 3.35rem;
-    background: #3190e8;
+    background: #2A85E5;
     padding: 2rem;
     display: flex;
     justify-content: space-between;

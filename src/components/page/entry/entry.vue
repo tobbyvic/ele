@@ -135,6 +135,7 @@
        * @constructor
        */
       JUMPTO_FOOD(food) {
+        console.log("hhhhhhhh");
         this.$router.push({path: '/food', query: {restaurant_category_id: food.id, title: food.title}});
       }
     }

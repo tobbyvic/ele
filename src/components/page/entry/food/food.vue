@@ -567,7 +567,7 @@
   }
 
   .filtrate_list_active {
-    color: aqua;
+    color: #3190e8;
   }
 
   .filtrate_container_list span {

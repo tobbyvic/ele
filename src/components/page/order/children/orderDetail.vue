@@ -18,7 +18,7 @@
       <div class="order-detail_title--bottom">
         <span>
         <computed-time v-if="itemDetail.status_bar.title == '等待支付'" :time="item.time_pass"></computed-time>
-        <a v-else>再来一单</a>
+        <a @click="BUY_AGAIN" v-else>再来一单</a>
         </span>
       </div>
     </section>
@@ -27,7 +27,7 @@
       <div class="order-detail_infro_title">
         <img :src="imgBaseUrl + itemDetail.restaurant_image_url" class="order-detail_infro_title_img"/>
         <span>{{ itemDetail.restaurant_name }}</span>
-        <span><i class="el-icon-arrow-right"></i></span>
+        <!--<span><i class="el-icon-arrow-right"></i></span>-->
       </div>
 
       <ul class="order-detail_infro_list">
@@ -106,6 +106,19 @@
         // this.$store.commit("MAKETRUE_PROFILE_DETAIL", false);
         this.$router.go(-1);
       },
+      /**
+       * 再来一单，跳转到entry页
+       * @constructor
+       */
+      BUY_AGAIN() {
+        this.$router.push("/entry");
+      },
+
+      GOTO_SHOP() {
+        const id = this.itemDetail.id;
+        this.$router.push({ path: `/shop/${id}` }) // -> /user/id
+      }
+
     }
   }
 </script>

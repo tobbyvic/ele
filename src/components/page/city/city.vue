@@ -3,14 +3,14 @@
     <!--header-->
     <div class="city_header">
       <div :span="24" class="city_header--inside">
-        <div class="city_header--inside_div">
+        <div class="city_header--inside_div" @click="CHANGE_CITY">
           <i class="el-icon-arrow-left"></i>
         </div>
         <div class="city_header--inside_location">
           {{ locationCity.name }}
         </div>
         <div class="city_header--inside_div">
-          切换城市
+          <a @click="CHANGE_CITY">切换城市</a>
         </div>
       </div>
     </div>
@@ -56,6 +56,13 @@
         })
     },
     methods: {
+      /**
+       * 切换城市，回到home页
+       * @constructor
+       */
+      CHANGE_CITY() {
+        this.$router.push("/home");
+      }
     }
   }
 </script>
