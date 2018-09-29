@@ -4,6 +4,8 @@
 
 ## Build Setup
 
+测试账号密码请用: dongdong@2017 dongdong
+
 ``` bash
 # install dependencies
 npm install
