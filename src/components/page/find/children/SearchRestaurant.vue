@@ -31,7 +31,7 @@
           </ul>
           <div class="search-res_history--empty" @click="EMPTY_HISTORY">清空历史</div>
         </div>
-        <p id="" class="search-res_history--null" v-else>老铁，你真行，当前没有任何历史记录!</p>
+        <p id="" class="search-res_history--null" v-else>当前没有任何历史记录!</p>
       </section>
     </div>
 

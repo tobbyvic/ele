@@ -19,12 +19,15 @@
           <el-input v-model="account" placeholder="账号" class="login_box_list_account"></el-input>
         </li>
         <li>
-          <el-input v-model="password" placeholder="密码" class="login_box_list_password"></el-input>
-          <el-switch
-            v-model="value2"
-            active-color="#13ce66"
-            inactive-color="#ff4949">
-          </el-switch>
+          <el-input v-model="password" :type="showPass ? 'text':'password'" placeholder="密码"
+                    class="login_box_list_password"></el-input>
+          <div style="display: flex;justify-content: center;align-items: center;flex: 1;">
+            <el-switch
+              v-model="showPass"
+              active-color="#13ce66"
+              inactive-color="#ff4949">
+            </el-switch>
+          </div>
         </li>
         <li>
           <el-input v-model="verification" placeholder="验证码" class="login_box_list_verification"></el-input>
@@ -63,7 +66,7 @@
         verification: "",
 
 
-        value2: true,
+        showPass: true,
 
         baseCode: ""
       }
@@ -103,20 +106,26 @@
        */
       SUBMIT() {
         // 因为后台返回的验证码老是无效，这里就取消登录，默认点击按钮即可登录到dongdong@2017账户
-        req.post(`v2/login`, {username: this.account, password: this.password, captcha_code: this.verification })
-          .then((response) => {
-            console.log(response.data);
-        });
+        // req.post(`v2/login`, {username: this.account, password: this.password, captcha_code: this.verification})
+        //   .then((response) => {
+        //     console.log(response.data);
+        //   });
+        if(this.account === 'dongdong@2017' && this.password === 'dongdong') {
+          // 返回dongdong@2017账户的相关信息，并存到localStorage中
+          req.get(`v1/user?user_id=10163`)
+            .then((response) => {
+              // 获取成功后
+              const res = JSON.stringify(response.data);
+              window.localStorage.setItem("user", res);
+              this.$router.push("/entry");
+              this.$store.commit("EMIT_USER", res);
+            });
+        } else {
+          this.$message.error('账号或密码错误');
+        }
 
-        // 返回dongdong@2017账户的相关信息，并存到localStorage中
-        req.get(`v1/user?user_id=10163`)
-          .then((response) => {
-            // 获取成功后
-            const res = JSON.stringify(response.data);
-            window.localStorage.setItem("user", res);
-            this.$router.push("/entry");
-            this.$store.commit("EMIT_USER",res);
-          });
+
+
       },
       /**
        * 返回上一个页面
@@ -138,6 +147,7 @@
 
   .login_box_list li {
     display: flex;
+    align-items: center;
   }
 
   .login_box_list_account {
